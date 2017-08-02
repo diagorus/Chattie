@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+    defaultConfig {
+        applicationId "com.fuh.chattie"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //kotlin stdlib
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    //android support
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:support-v4:$support_version"
+    compile "com.android.support:design:$support_version"
+    compile "com.android.support:recyclerview-v7:$support_version"
+
+    //retrofit
+    compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+
+    //rxjava2
+    compile "io.reactivex.rxjava2:rxjava:$rxjava2_version"
+    //rxandroid
+    compile "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+
+    //glide
+    compile "com.github.bumptech.glide:glide:$glide_version"
+
+    //okhttp
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    //timber
+    compile "com.jakewharton.timber:timber:$timber_version"
+}
+
+buildscript {
+    ext {
+        support_version = '26.0.0'
+        retrofit_version = '2.3.0'
+        okhttp_version = '3.8.0'
+        rxjava2_version = '2.1.0'
+        rxandroid_version = '2.0.1'
+        glide_version = '4.0.0-RC1'
+        timber_version = '4.5.1'
+    }
+}
