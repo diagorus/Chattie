@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
@@ -18,6 +19,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
@@ -51,6 +55,9 @@ dependencies {
 
     //timber
     compile "com.jakewharton.timber:timber:$timber_version"
+
+    //firebase
+    compile 'com.google.firebase:firebase-core:11.0.4'
 }
 
 buildscript {
@@ -64,3 +71,5 @@ buildscript {
         timber_version = '4.5.1'
     }
 }
+
+apply plugin: 'com.google.gms.google-services'
