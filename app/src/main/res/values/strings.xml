@@ -53,4 +53,5 @@
     <string name="register_lastname">Last name</string>
     <string name="register_city">City</string>
     <string name="register_repeatpassword">Repeat password</string>
+    <string name="chat_menu_sign_out">Sign out</string>
 </resources>

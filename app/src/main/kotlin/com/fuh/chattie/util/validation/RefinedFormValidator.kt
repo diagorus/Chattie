@@ -1,10 +1,9 @@
 package com.fuh.chattie.util.validation
 
-import com.fuh.spotlight.model.*
 import com.fuh.chattie.util.validation.FieldValidationResponse.*
 
 //TODO: change name!!!
-class FormValidatorImpl: FormValidator {
+class RefinedFormValidator : FormValidator {
     override fun validateRegister(data: RegisterFormData): RegisterValidationResponse {
         val firstName = when {
             data.firstName.isNullOrEmpty() -> EMPTY

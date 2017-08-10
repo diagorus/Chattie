@@ -5,34 +5,37 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.fuh.chattie.R
-import com.fuh.chattie.util.extentions.replaceFragment
+import com.google.firebase.auth.FirebaseUser
 
-class LoginActivity: Activity(), LoginFlowContract.View {
+class LoginActivity: Activity(), LoginContract.View {
 
     companion object {
         fun newIntent(ctx: Context) = Intent(ctx, LoginActivity::class.java)
     }
 
+    override var presenter: LoginContract.Presenter
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-
-        showLoginMenu()
+        setContentView(R.layout.login_activity)
     }
 
-    override fun showLogin() {
-        val loginFragment: LoginFragment = LoginFragment.newInstance()
-        replaceFragment(loginFragment, R.id.container)
+    override fun showEmailOrPasswordError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showLoginMenu() {
-        val loginMenuFragment: LoginMenuFragment = LoginMenuFragment.newInstance()
-        replaceFragment(loginMenuFragment, R.id.container)
+    override fun showLoginSuccessful(user: FirebaseUser) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showRegister() {
-        val registerFragment: RegisterFragment = RegisterFragment.newInstance()
-        replaceFragment(registerFragment, R.id.container)
+    override fun showLoginFailure() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setProgress(active: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
 

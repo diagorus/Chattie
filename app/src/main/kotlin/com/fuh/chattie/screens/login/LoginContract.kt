@@ -1,25 +1,23 @@
 package com.fuh.chattie.screens.login
 
-import com.fuh.spotlight.model.ErrorResponse
-import com.fuh.spotlight.model.User
-import com.fuh.spotlight.ui.BaseView
+import com.fuh.chattie.util.BasePresenter
+import com.fuh.chattie.util.BaseView
+import com.google.firebase.auth.FirebaseUser
 
+/**
+ * Created by lll on 10.08.2017.
+ */
 object LoginContract {
     interface View: BaseView<Presenter> {
-        fun showEmailEmptyError()
-        fun showEmailError()
-        fun showPasswordEmptyError()
-        fun showPasswordError()
-        fun showNetworkError()
-        fun showUnexpectedError()
-        fun hideKeyboard()
-        fun hideErrors()
-        fun showErrorResponse(errorResponse: ErrorResponse)
+        fun showEmailOrPasswordError()
+        fun showLoginSuccessful(user: FirebaseUser)
+        fun showLoginFailure()
         fun setProgress(active: Boolean)
-        fun showWelcome(user: User)
     }
 
-    interface Presenter {
+    interface Presenter: BasePresenter {
+        fun checkIsUserLogged()
+
         fun attemptLogin(email: String, password: String)
     }
 }

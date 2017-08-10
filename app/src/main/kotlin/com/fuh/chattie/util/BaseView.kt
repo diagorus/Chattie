@@ -1,4 +1,4 @@
-package com.fuh.spotlight.ui
+package com.fuh.chattie.util
 
 interface BaseView<T> {
     var presenter: T
