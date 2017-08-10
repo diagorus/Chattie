@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:textSize="28sp"
+        android:textAlignment="center"
+        android:text="@string/loginmenu_signintitle"/>
+    <!--TODO: change buttons to be mode material -->
+    <Button
+        android:id="@+id/loginMenuSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/loginmenu_signin"
+        style="?android:textAppearanceSmall" />
+    <!--TODO: change this to OR + divider -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="8dp"
+        android:text="@string/all_or"/>
+    <Button
+        android:id="@+id/loginMenuSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/loginmenu_signup"
+        style="?android:textAppearanceSmall"/>
+</LinearLayout>
