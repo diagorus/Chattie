@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:layout_below="@id/tvChatItemUser">
+
         <TextView
             android:id="@+id/tvChatItemText"
             android:layout_width="wrap_content"
