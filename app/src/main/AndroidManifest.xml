@@ -13,7 +13,7 @@
 
         <activity
             android:name=".screens.chat.ChatActivity"
-            android:windowSoftInputMode="stateHidden|stateUnspecified|adjustResize">
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
 
         </activity>
 

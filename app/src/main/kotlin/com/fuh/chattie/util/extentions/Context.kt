@@ -4,6 +4,9 @@ import android.content.Context
 import android.widget.Toast
 import android.content.ContentResolver
 import android.net.Uri
+import android.util.TypedValue
+
+
 
 
 /**
@@ -20,4 +23,12 @@ fun Context.resourceToUri(resId: Int): Uri {
             resources.getResourceTypeName(resId) + '/' +
             resources.getResourceEntryName(resId)
     )
+}
+
+fun Context.dp(px: Float): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, resources.displayMetrics)
+}
+
+fun Context.dp(px: Int): Int {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px.toFloat(), resources.displayMetrics).toInt()
 }

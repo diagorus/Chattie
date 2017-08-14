@@ -2,12 +2,15 @@ package com.fuh.chattie.screens.profile
 
 import android.os.Bundle
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.firebase.ui.auth.AuthUI
 import com.fuh.chattie.R
 import com.fuh.chattie.util.BaseAppCompatActivity
+import com.fuh.chattie.util.extentions.dp
 import com.fuh.chattie.util.extentions.resourceToUri
 import com.fuh.chattie.util.extentions.toast
 import com.google.firebase.auth.FirebaseAuth
+import jp.wasabeef.glide.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.include_toolbar.*
 import kotlinx.android.synthetic.main.profile_activity.*
 
@@ -30,8 +33,11 @@ class ProfileActivity : BaseAppCompatActivity() {
 
         val photoUri = firebaseAuth.currentUser?.photoUrl ?: resourceToUri(R.drawable.no_avatar)
 
+        val requestOptions = RequestOptions.bitmapTransform(CropCircleTransformation(this))
+
         Glide.with(this)
                 .load(photoUri)
+                .apply(requestOptions)
                 .into(ivProfilePhoto)
 
         val userName = firebaseAuth.currentUser?.displayName ?: "Unknown"

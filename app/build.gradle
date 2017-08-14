@@ -52,6 +52,9 @@ dependencies {
     //glide
     compile "com.github.bumptech.glide:glide:$glide_version"
 
+    //glide transformations
+    compile 'jp.wasabeef:glide-transformations:2.0.2'
+
     //okhttp
     compile "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
@@ -80,7 +83,8 @@ buildscript {
         okhttp_version = '3.8.0'
         rxjava2_version = '2.1.0'
         rxandroid_version = '2.0.1'
-        glide_version = '4.0.0-RC1'
+        glide_version = '4.0.0'
+        glide_transformations_version = '2.0.2'
         timber_version = '4.5.1'
         firebase_version = '11.0.4'
         firebase_ui_version = '2.2.0'
