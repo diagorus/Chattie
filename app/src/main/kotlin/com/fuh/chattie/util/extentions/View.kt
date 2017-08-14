@@ -2,8 +2,12 @@ package com.fuh.chattie.util.extentions
 
 import android.content.Context
 import android.support.design.widget.TextInputLayout
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.URLSpan
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 
 val View.ctx: Context
     get() = context
@@ -27,3 +31,13 @@ var TextInputLayout.textValue: String
     set(v) {
         editText!!.textValue = v
     }
+
+fun TextView.makeHyperlinkLike() {
+    val ssb = SpannableStringBuilder()
+            .apply {
+                append(text)
+                setSpan(URLSpan("#"), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+    setText(ssb, TextView.BufferType.SPANNABLE)
+}
