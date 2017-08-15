@@ -8,5 +8,6 @@ import java.util.*
 data class ChatMessage(
         var text: String? = null,
         var user: String? = null,
+        var uid: String? = null,
         var time: Long = 0
 )

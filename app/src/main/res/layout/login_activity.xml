@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:focusableInTouchMode="true">
 
     <!--<android.support.v7.widget.AppCompatImageView-->
         <!--android:id="@+id/ivLoginLogo"-->
@@ -23,116 +24,95 @@
         android:layout_margin="4dp"
         android:text="Sign in" />
 
-    <LinearLayout
-        android:id="@+id/llLoginSocial"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="4dp"
-        android:layout_below="@id/tvLoginInvitation" >
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btnLoginSignInFacebook"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginEnd="4dp"
-            android:text="F" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btnLoginSignInGoogle"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:text="G" />
-    </LinearLayout>
-
     <RelativeLayout
-        android:id="@+id/rlLoginDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/llLoginSocial"
         android:layout_margin="8dp"
-        android:layout_centerVertical="true">
+        android:layout_below="@id/tvLoginInvitation">
+
+        <LinearLayout
+            android:id="@+id/llLoginSocial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="4dp">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnLoginSignInFacebook"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginEnd="4dp"
+                android:text="F" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnLoginSignInGoogle"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:text="G" />
+        </LinearLayout>
+
+        <com.fuh.chattie.views.DividerTextView
+            android:id="@+id/dtvLoginDivider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llLoginSocial"
+            android:layout_margin="8dp"
+            app:dividerText="or" />
+
+        <LinearLayout
+            android:id="@+id/llLoginSignInForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/dtvLoginDivider">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="textEmailAddress"
+                    android:hint="Email" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="textPassword"
+                    android:hint="Password" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnLoginSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign In" />
+        </LinearLayout>
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvLoginDividerText"
+            android:id="@+id/tvLoginForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:textColor="#FF000000"
-            android:text="or" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
-            android:layout_toStartOf="@id/tvLoginDividerText"
-            android:background="#FF000000" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
-            android:layout_toEndOf="@id/tvLoginDividerText"
-            android:background="#FF000000" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/llLoginSignInForm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@+id/rlLoginDivider">
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"/>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btnLoginSignIn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rlLoginDivider"
+            android:layout_below="@id/llLoginSignInForm"
             android:layout_centerHorizontal="true"
-            android:text="Sign In" />
-    </LinearLayout>
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/tvLoginForgotPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/llLoginSignInForm"
-        android:layout_centerHorizontal="true"
-        android:textSize="@dimen/fontSize_small"
-        android:layout_margin="8dp"
-        android:text="Forgot password?" />
+            android:textSize="@dimen/fontSize_small"
+            android:layout_margin="8dp"
+            android:text="Forgot password?" />
+    </RelativeLayout>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnLoginNotNow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        tools:text="Not now" />
+        android:text="Not now" />
 </RelativeLayout>

@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.fuh.chattie.R
@@ -29,7 +28,7 @@ class ChatActivity : AppCompatActivity() {
         private const val SIGN_IN_REQUEST_CODE = 100
     }
 
-    private lateinit var chatMessageAdapter: FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder>
+    private lateinit var chatMessageAdapter: ChatAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +65,9 @@ class ChatActivity : AppCompatActivity() {
                                     FirebaseAuth.getInstance()
                                             .currentUser!!
                                             .displayName,
+                                    FirebaseAuth.getInstance()
+                                            .currentUser!!
+                                            .uid,
                                     Date().time
                             )
                     )
@@ -116,18 +118,12 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun displayChatMessages() {
-        chatMessageAdapter = object : FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder>(
-                ChatMessage::class.java,
-                R.layout.chat_item,
-                ChatMessageViewHolder::class.java,
-                FirebaseDatabase.getInstance().reference
-        ) {
-            override fun populateViewHolder(viewHolder: ChatMessageViewHolder, model: ChatMessage, position: Int) {
-                viewHolder.bind(model)
-            }
-        }
+        val currentUser = FirebaseAuth.getInstance().currentUser!!
+        val reference = FirebaseDatabase.getInstance().reference
+        chatMessageAdapter = ChatAdapter(currentUser, reference)
 
         val layoutManager = LinearLayoutManager(this)
+                .apply { stackFromEnd = true }
 
         chatMessageAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
