@@ -3,18 +3,21 @@ package com.fuh.chattie.screens.chat
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.fuh.chattie.R
 import com.fuh.chattie.screens.model.ChatMessage
+import com.fuh.chattie.screens.profile.ProfileActivity
+import com.fuh.chattie.util.BaseToolbarActivity
 import com.fuh.chattie.util.extentions.toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.jakewharton.rxbinding2.support.v7.widget.scrollEvents
 import kotlinx.android.synthetic.main.chat_activity.*
 import java.util.*
 
@@ -22,7 +25,7 @@ import java.util.*
 /**
  * Created by lll on 09.08.2017.
  */
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : BaseToolbarActivity() {
 
     companion object {
         private const val SIGN_IN_REQUEST_CODE = 100
@@ -30,10 +33,14 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var chatMessageAdapter: ChatAdapter
 
+    override fun getLayoutId(): Int = R.layout.chat_activity
+
+    override fun ActionBar.init() {
+        title = "Chat"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.chat_activity)
 
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -53,7 +60,7 @@ class ChatActivity : AppCompatActivity() {
             displayChatMessages()
         }
 
-        fabChatSend.setOnClickListener {
+        ivChatSend.setOnClickListener {
             // Read the input field and push a new instance
             // of ChatMessage to the Firebase database
             FirebaseDatabase.getInstance()
@@ -83,14 +90,10 @@ class ChatActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_sign_out) {
-            AuthUI.getInstance().signOut(this)
-                    .addOnCompleteListener {
-                        toast("You have been signed out.")
+        if (item.itemId == R.id.chat_menu_profile) {
+            val intent = ProfileActivity.newIntent(this)
 
-                        // Close activity
-                        finish()
-                    }
+            startActivity(intent)
         }
         return true
     }
@@ -141,19 +144,26 @@ class ChatActivity : AppCompatActivity() {
             }
         })
 
-//        rvChatMessages.addOnLayoutChangeListener {
-//            _: View,
-//            _: Int, _: Int, _: Int, bottom: Int,
-//            _: Int, _: Int, _: Int, oldBottom: Int ->
-//
-//            if (bottom < oldBottom) {
-//                rvChatMessages.postDelayed({
-//                    rvChatMessages.scrollToPosition(rvChatMessages.adapter.itemCount - 1)
-//                }, 100)
-//            }
-//        }
-
         rvChatMessages.layoutManager = layoutManager
         rvChatMessages.adapter = chatMessageAdapter
+
+        fabChatScrollToEnd.setOnClickListener {
+            rvChatMessages.smoothScrollToPosition(chatMessageAdapter.itemCount - 1)
+        }
+
+
+        rvChatMessages.scrollEvents()
+                .map {
+                    Log.d("TAG", "layoutManager.findLastVisibleItemPosition() ${layoutManager.findLastVisibleItemPosition()} " +
+                            "layoutManager.itemCount - 1 ${layoutManager.itemCount - 1}")
+                    layoutManager.findLastVisibleItemPosition() == layoutManager.itemCount - 1
+                }
+                .subscribe {
+                    if (it) {
+                        fabChatScrollToEnd.hide()
+                    } else {
+                        fabChatScrollToEnd.show()
+                    }
+                }
     }
 }

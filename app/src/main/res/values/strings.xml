@@ -53,5 +53,11 @@
     <string name="register_lastname">Last name</string>
     <string name="register_city">City</string>
     <string name="register_repeatpassword">Repeat password</string>
+
     <string name="chat_menu_sign_out">Sign out</string>
+    <string name="chat_menu_profile">Profile</string>
+    <string name="photo_chooser_invitation">Photo from</string>
+    <string name="photo_chooser_from_camera">Camera</string>
+    <string name="photo_chooser_from_gallery">Gallery</string>
+    <string name="photo_chooser_from_choose_gallery_program">Select picture from</string>
 </resources>

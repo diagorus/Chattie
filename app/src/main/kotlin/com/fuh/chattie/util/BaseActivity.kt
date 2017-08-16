@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 /**
  * Created by lll on 11.08.2017.
  */
-abstract class BaseAppCompatActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     @LayoutRes abstract fun getLayoutId(): Int
 
