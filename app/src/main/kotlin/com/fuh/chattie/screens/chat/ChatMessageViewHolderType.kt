@@ -26,5 +26,5 @@ enum class ChatMessageViewHolderType(
     }
 
     private fun create(parent: ViewGroup): View =
-            LayoutInflater.from(parent.context).inflate(layoutId, parent)
+            LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
 }

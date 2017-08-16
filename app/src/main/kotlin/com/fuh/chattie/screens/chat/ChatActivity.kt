@@ -120,6 +120,7 @@ class ChatActivity : AppCompatActivity() {
     private fun displayChatMessages() {
         val currentUser = FirebaseAuth.getInstance().currentUser!!
         val reference = FirebaseDatabase.getInstance().reference
+
         chatMessageAdapter = ChatAdapter(currentUser, reference)
 
         val layoutManager = LinearLayoutManager(this)
@@ -152,7 +153,7 @@ class ChatActivity : AppCompatActivity() {
 //            }
 //        }
 
-        rvChatMessages.adapter = chatMessageAdapter
         rvChatMessages.layoutManager = layoutManager
+        rvChatMessages.adapter = chatMessageAdapter
     }
 }

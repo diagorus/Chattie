@@ -1,7 +1,10 @@
 package com.fuh.chattie.screens.chat
 
+import android.arch.lifecycle.LifecycleOwner
 import android.view.ViewGroup
+import com.firebase.ui.database.FirebaseIndexRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.firebase.ui.database.FirebaseRecyclerAdapter_LifecycleAdapter
 import com.fuh.chattie.screens.model.ChatMessage
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.Query
@@ -10,7 +13,7 @@ import com.google.firebase.database.Query
  * Created by lll on 15.08.2017.
  */
 class ChatAdapter(
-        val user: FirebaseUser,
+        private val user: FirebaseUser,
         query: Query
 ) : FirebaseRecyclerAdapter<ChatMessage, BaseChatViewHolder>(
         ChatMessage::class.java,

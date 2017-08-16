@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/margin_small"
-    android:layout_gravity="end"
-    android:minHeight="55dp"
-    app:cardBackgroundColor="@color/blue"
-    app:cardCornerRadius="8dp"
-    app:cardUseCompatPadding="true">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/margin_small"
+        android:minHeight="54dp"
+        app:cardBackgroundColor="@color/blue"
+        app:cardCornerRadius="8dp"
+        app:cardUseCompatPadding="true">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvChatItemOutgoingMessage"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/margin_medium"
-            android:autoLink="web"
-            android:maxWidth="200dp"
-            android:textSize="@dimen/fontSize_small"
-            android:textColor="@color/white"
-            tools:text="dfdfdssdadsfdsffsdfsdfsfsfsfsfsdfsdfsdfsfsfsfsdfsdfsdfsfsdasdasаdasdasdasdasasdasdsdffdsff" />
+            android:orientation="vertical"
+            android:padding="@dimen/margin_medium">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tvChatItemOutgoingTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:alpha="0.8"
-            android:maxLength="5"
-            android:maxLines="1"
-            android:textColor="@color/white"
-            android:textSize="@dimen/fontSize_small"
-            tools:text="11:44" />
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tvChatItemOutgoingMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/margin_medium"
+                android:autoLink="web"
+                android:minWidth="64dp"
+                android:maxWidth="200dp"
+                android:textSize="@dimen/fontSize_small"
+                android:textColor="@color/white"
+                tools:text="d" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tvChatItemOutgoingTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:alpha="0.8"
+                android:maxLength="5"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/fontSize_small"
+                tools:text="11:44" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>
