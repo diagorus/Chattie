@@ -12,6 +12,7 @@ import android.view.MenuItem
 import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
 import com.fuh.chattie.R
+import com.fuh.chattie.screens.model.User
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.fuh.chattie.util.ProgressNotificationManager
 import com.fuh.chattie.util.extentions.*
@@ -27,17 +28,18 @@ import io.reactivex.Completable
 /**
  * Created by lll on 11.08.2017.
  */
-class ProfileActivity : BaseToolbarActivity() {
+class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
 
     companion object {
         fun newIntent(context: Context): Intent =
                 Intent(context, ProfileActivity::class.java)
     }
 
+    override lateinit var presenter: ProfileContract.Presenter
+
     private val uriForCameraPhoto by lazy { getUriForCameraPhoto("Profile_photo.jpg")!! }
 
     private var newPhotoUri: Uri? = null
-
 
     override fun getLayoutId(): Int = R.layout.profile_activity
 
@@ -48,15 +50,8 @@ class ProfileActivity : BaseToolbarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val firebaseAuth = FirebaseAuth.getInstance()
-
-        val photoUri = firebaseAuth.currentUser?.photoUrl ?: resourceToUri(R.drawable.no_avatar)
-
-        loadImageByUri(ivProfilePhoto, photoUri)
-
-        val userName = firebaseAuth.currentUser?.displayName ?: "Unknown"
-
-        etProfileName.textValue = userName
+        presenter = ProfilePresenter(this)
+        presenter.start()
 
         btnProfileLogout.setOnClickListener {
             AuthUI.getInstance().signOut(this)
@@ -74,14 +69,13 @@ class ProfileActivity : BaseToolbarActivity() {
         }
 
         ivProfilePhoto.setOnClickListener {
-
             showChooserPhotoFrom(uriForCameraPhoto)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.profile_menu, menu)
-        return super.onCreateOptionsMenu(menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -116,7 +110,6 @@ class ProfileActivity : BaseToolbarActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
-
             when(requestCode) {
                 REQUEST_CAMERA -> {
                     newPhotoUri = uriForCameraPhoto
@@ -144,6 +137,14 @@ class ProfileActivity : BaseToolbarActivity() {
                 REQUEST_PERMISSION_STORAGE -> startGallery()
             }
         }
+    }
+
+    override fun showUser(user: User) {
+        val photoUri = user.photoUri ?: resourceToUri(R.drawable.no_avatar)
+        loadImageByUri(ivProfilePhoto, photoUri)
+
+        val userName = user.name ?: getString(R.string.all_user_name_default)
+        etProfileName.textValue = userName
     }
 
     private fun uploadProfilePhotoToFirebase(uri: Uri): Observable<Progress> {
@@ -182,6 +183,4 @@ class ProfileActivity : BaseToolbarActivity() {
     }
 
     data class Progress(val percents: Double)
-
-    data class User(val name: String, val photoUri: Uri?)
 }
