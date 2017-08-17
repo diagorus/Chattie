@@ -15,7 +15,11 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.util.TypedValue
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.fuh.chattie.R
+import kotlinx.android.synthetic.main.profile_activity.*
 import java.io.File
 
 
@@ -47,14 +51,24 @@ fun Context.checkPermission(permission: String): Boolean =
 fun Context.createBitmap(uri: Uri): Bitmap? =
         MediaStore.Images.Media.getBitmap(contentResolver, uri)
 
-fun Context.createImageFile(): Uri? {
-    val file = getFileInAppRoot("Images/Profile photo.jpg")
-
-    return FileProvider.getUriForFile(this, packageName, file)
-}
-
 fun Context.getFileInAppRoot(name: String): File {
-    val rootDir = File(Environment.getExternalStorageDirectory(), "/${getString(R.string.app_name)}")
+    val rootDir = File(Environment.getExternalStorageDirectory(), getString(R.string.app_name))
     if (!rootDir.exists()) { rootDir.mkdir() }
     return File(rootDir, name)
+}
+
+fun Context.getFileInImages(name: String): File {
+    val rootPath = File(cacheDir, "images")
+
+    if (!rootPath.exists()) { rootPath.mkdirs() }
+    return File(rootPath, name)
+}
+
+fun Context.loadImageByUri(into: ImageView, uri: Uri) {
+    val options = RequestOptions.circleCropTransform()
+
+    Glide.with(this)
+            .load(uri)
+            .apply(options)
+            .into(into)
 }

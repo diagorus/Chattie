@@ -28,7 +28,7 @@ import java.util.*
 class ChatActivity : BaseToolbarActivity() {
 
     companion object {
-        private const val SIGN_IN_REQUEST_CODE = 100
+        private const val SIGN_IN_REQUEST_CODE = 200
     }
 
     private lateinit var chatMessageAdapter: ChatAdapter
@@ -90,10 +90,12 @@ class ChatActivity : BaseToolbarActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.chat_menu_profile) {
-            val intent = ProfileActivity.newIntent(this)
+        when (item.itemId) {
+            R.id.chat_menu_profile -> {
+                val intent = ProfileActivity.newIntent(this)
 
-            startActivity(intent)
+                startActivity(intent)
+            }
         }
         return true
     }

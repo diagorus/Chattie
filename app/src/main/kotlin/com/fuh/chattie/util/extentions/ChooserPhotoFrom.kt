@@ -2,10 +2,13 @@ package com.fuh.chattie.util.extentions
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import com.fuh.chattie.R
 
@@ -19,7 +22,7 @@ const val REQUEST_PERMISSION_CAMERA = 110
 const val REQUEST_PERMISSION_STORAGE = 111
 
 
-fun Activity.showChooserPhotoFrom() {
+fun Activity.showChooserPhotoFrom(uriForCamera: Uri) {
     val items = arrayOf(
             getString(R.string.photo_chooser_from_camera),
             getString(R.string.photo_chooser_from_gallery)
@@ -29,7 +32,7 @@ fun Activity.showChooserPhotoFrom() {
             .setTitle(R.string.photo_chooser_invitation)
             .setItems(items) { dialog, which ->
                 if (which == 0) {
-                    openCamera()
+                    openCamera(uriForCamera)
                 } else {
                     openGallery()
                 }
@@ -59,35 +62,33 @@ fun Activity.startGallery() {
     )
 }
 
-fun Activity.openCamera() {
+fun Activity.openCamera(uriForCamera: Uri) {
     if (checkPermission(Manifest.permission.CAMERA) &&
             checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-        startCamera()
+        startCamera(uriForCamera)
     } else {
         requestPermissionCamera()
     }
 }
 
-fun Activity.startCamera() {
+fun Activity.startCamera(uriForCamera: Uri) {
     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
     if (intent.resolveActivity(packageManager) != null) {
         val resInfoList = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-        val filePathPhoto = createImageFile()
 
-        if (filePathPhoto != null) {
-            resInfoList.forEach {
-                val packageName = it.activityInfo.packageName
-                grantUriPermission(
-                        packageName,
-                        filePathPhoto,
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-            }
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, filePathPhoto)
+        resInfoList.forEach {
+            val packageName = it.activityInfo.packageName
 
-            ActivityCompat.startActivityForResult(this, intent, REQUEST_CAMERA, null)
+            grantUriPermission(
+                    packageName,
+                    uriForCamera,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
         }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriForCamera)
+
+        startActivityForResult(intent, REQUEST_CAMERA, null)
     }
 }
 
@@ -112,4 +113,10 @@ fun Activity.requestPermissionCamera() {
                 REQUEST_PERMISSION_CAMERA
         )
     }
+}
+
+fun Context.getUriForCameraPhoto(name: String): Uri? {
+    val file = getFileInImages(name)
+
+    return FileProvider.getUriForFile(this, getString(R.string.file_provider_authorities), file)
 }

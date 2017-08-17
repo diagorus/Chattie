@@ -16,14 +16,21 @@
         android:layout_below="@id/appBarLayout"
         tools:src="@drawable/bread" />
 
-    <TextView
-        android:id="@+id/tvProfileName"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivProfilePhoto"
-        android:textSize="32sp"
-        android:layout_centerHorizontal="true"
-        tools:text="John Doe" />
+        android:layout_margin="@dimen/margin_medium"
+        android:layout_centerHorizontal="true">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/etProfileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="32sp"
+            android:hint="User name"
+            tools:text="John Doe" />
+    </android.support.design.widget.TextInputLayout>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnProfileLogout"

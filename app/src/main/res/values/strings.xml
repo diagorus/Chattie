@@ -1,5 +1,6 @@
 <resources>
-    <!-- TODO: russian? -->
+    <string name="file_provider_authorities">com.fuh.fileprovider</string>
+
     <string name="app_name">Chattie</string>
 
     <string name="all_or">or</string>
@@ -56,6 +57,9 @@
 
     <string name="chat_menu_sign_out">Sign out</string>
     <string name="chat_menu_profile">Profile</string>
+
+    <string name="profile_menu_save">Save</string>
+
     <string name="photo_chooser_invitation">Photo from</string>
     <string name="photo_chooser_from_camera">Camera</string>
     <string name="photo_chooser_from_gallery">Gallery</string>
