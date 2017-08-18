@@ -2,7 +2,7 @@ package com.fuh.chattie.screens.profile
 
 import com.fuh.chattie.model.User
 import com.fuh.chattie.model.UserDataSource
-import com.google.firebase.auth.FirebaseAuth
+import timber.log.Timber
 
 /**
  * Created by lll on 17.08.2017.
@@ -20,11 +20,9 @@ class ProfilePresenter(val view: ProfileContract.View, val model: UserDataSource
                             view.showUser(it)
                         },
                         {
-                            view.showNoUserError()
+                            Timber.e(it)
                         }
                 )
-
-
     }
 
     override fun updateUser(user: User) {

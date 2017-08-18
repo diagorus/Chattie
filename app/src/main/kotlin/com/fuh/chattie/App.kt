@@ -2,6 +2,7 @@ package com.fuh.chattie
 
 import android.app.Application
 import android.os.SystemClock
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 /**
@@ -11,5 +12,12 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        if (BuildConfig.DEBUG) {
+            initTimber()
+        }
+    }
+
+    private fun initTimber() {
+        Timber.plant(Timber.DebugTree())
     }
 }
