@@ -11,7 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.firebase.ui.auth.AuthUI
 import com.fuh.chattie.R
-import com.fuh.chattie.screens.model.ChatMessage
+import com.fuh.chattie.model.ChatMessage
 import com.fuh.chattie.screens.profile.ProfileActivity
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.fuh.chattie.util.extentions.toast

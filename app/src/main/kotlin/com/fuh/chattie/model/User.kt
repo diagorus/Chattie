@@ -1,4 +1,4 @@
-package com.fuh.chattie.screens.model
+package com.fuh.chattie.model
 
 import android.net.Uri
 

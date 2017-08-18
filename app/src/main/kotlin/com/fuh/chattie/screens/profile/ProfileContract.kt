@@ -1,6 +1,6 @@
 package com.fuh.chattie.screens.profile
 
-import com.fuh.chattie.screens.model.User
+import com.fuh.chattie.model.User
 import com.fuh.chattie.util.BasePresenter
 import com.fuh.chattie.util.BaseView
 
@@ -10,9 +10,13 @@ import com.fuh.chattie.util.BaseView
 object ProfileContract {
     interface View : BaseView<Presenter> {
         fun showUser(user: User)
-    }
+        fun showUserUpdateStart()
+        fun showUserUpdateComplete()
+        fun showUserUpdateFail()
+}
 
     interface Presenter : BasePresenter {
         fun loadUser()
+        fun updateUser(user: User)
     }
 }

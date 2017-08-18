@@ -3,7 +3,7 @@ package com.fuh.chattie.screens.chat
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateFormat
 import android.view.View
-import com.fuh.chattie.screens.model.ChatMessage
+import com.fuh.chattie.model.ChatMessage
 import kotlinx.android.synthetic.main.chat_item_incoming.view.*
 import kotlinx.android.synthetic.main.chat_item_outgoing.view.*
 

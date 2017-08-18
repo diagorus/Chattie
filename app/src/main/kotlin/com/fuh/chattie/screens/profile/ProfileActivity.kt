@@ -9,21 +9,14 @@ import android.os.Bundle
 import android.support.v7.app.ActionBar
 import android.view.Menu
 import android.view.MenuItem
-import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
 import com.fuh.chattie.R
-import com.fuh.chattie.screens.model.User
+import com.fuh.chattie.model.User
+import com.fuh.chattie.model.UserDataSource
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.fuh.chattie.util.ProgressNotificationManager
 import com.fuh.chattie.util.extentions.*
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.profile_activity.*
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.UserProfileChangeRequest
-import io.reactivex.Completable
-
 
 /**
  * Created by lll on 11.08.2017.
@@ -33,11 +26,14 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
     companion object {
         fun newIntent(context: Context): Intent =
                 Intent(context, ProfileActivity::class.java)
+
+        private const val NOTIFICATION_PROFILE_UPDATE = 13
     }
 
     override lateinit var presenter: ProfileContract.Presenter
 
     private val uriForCameraPhoto by lazy { getUriForCameraPhoto("Profile_photo.jpg")!! }
+    private val notificationManager = ProgressNotificationManager(this)
 
     private var newPhotoUri: Uri? = null
 
@@ -50,7 +46,7 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = ProfilePresenter(this)
+        presenter = ProfilePresenter(this, UserDataSource())
         presenter.start()
 
         btnProfileLogout.setOnClickListener {
@@ -81,26 +77,11 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.profile_menu_save -> {
-                val notificationManager = ProgressNotificationManager(this)
+
 
                 val userName = etProfileName.textValue
-                updateUserProfile(User(userName, newPhotoUri))
-                        .doOnSubscribe {
-                            notificationManager.startDeterminate(
-                                    0,
-                                    ProgressNotificationManager.Options("Uploading...", "Profile updating", R.mipmap.ic_launcher)
-                            )
-                        }
-                        .subscribe(
-                                {
-                                    notificationManager.cancel(0)
-                                }, {
-                                    notificationManager.fail(
-                                            0,
-                                            ProgressNotificationManager.Options("Uploading failed", "Profile updating", R.mipmap.ic_launcher)
-                                    )
-                                }
-                        )
+
+                presenter.updateUser(User(userName, newPhotoUri))
             }
         }
         return true
@@ -120,7 +101,7 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
             }
 
             newPhotoUri?.let {
-                loadImageByUri(ivProfilePhoto, it)
+                ivProfilePhoto.loadImageByUri(it)
             }
         }
     }
@@ -141,46 +122,27 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
 
     override fun showUser(user: User) {
         val photoUri = user.photoUri ?: resourceToUri(R.drawable.no_avatar)
-        loadImageByUri(ivProfilePhoto, photoUri)
+        ivProfilePhoto.loadImageByUri(photoUri)
 
         val userName = user.name ?: getString(R.string.all_user_name_default)
         etProfileName.textValue = userName
     }
 
-    private fun uploadProfilePhotoToFirebase(uri: Uri): Observable<Progress> {
-        val userId = FirebaseAuth.getInstance().currentUser!!.uid
-
-        return Observable.create<Progress> { emitter ->
-            FirebaseStorage.getInstance()
-                    .reference
-                    .child("image/profilePhoto_$userId")
-                    .putFile(uri)
-                    .addOnCompleteListener { emitter.onComplete() }
-                    .addOnFailureListener { emitter.onError(it) }
-                    .addOnProgressListener {
-                        val progress = (100.0 * it.bytesTransferred) / it.totalByteCount
-
-                        emitter.onNext(Progress(progress))
-                    }
-        }
-
-
+    override fun showUserUpdateStart() {
+        notificationManager.startDeterminate(
+                NOTIFICATION_PROFILE_UPDATE,
+                ProgressNotificationManager.Options("Uploading...", "Profile updating", R.mipmap.ic_launcher)
+        )
     }
 
-    private fun updateUserProfile(user: User): Completable {
-        val firebaseUser = FirebaseAuth.getInstance().currentUser!!
-
-        val profileUpdates = UserProfileChangeRequest.Builder()
-                .setDisplayName(user.name)
-                .setPhotoUri(user.photoUri)
-                .build()
-
-        return Completable.create { emitter ->
-            firebaseUser.updateProfile(profileUpdates)
-                    .addOnFailureListener { emitter.onError(it) }
-                    .addOnCompleteListener { emitter.onComplete() }
-        }
+    override fun showUserUpdateComplete() {
+        notificationManager.cancel(NOTIFICATION_PROFILE_UPDATE)
     }
 
-    data class Progress(val percents: Double)
+    override fun showUserUpdateFail() {
+        notificationManager.fail(
+                NOTIFICATION_PROFILE_UPDATE,
+                ProgressNotificationManager.Options("Uploading failed", "Profile updating", R.mipmap.ic_launcher)
+        )
+    }
 }
