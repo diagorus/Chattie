@@ -11,11 +11,17 @@ import android.view.Menu
 import android.view.MenuItem
 import com.firebase.ui.auth.AuthUI
 import com.fuh.chattie.R
+import com.fuh.chattie.model.CurrentUserChangeableModel
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.UserDataSource
+import com.fuh.chattie.model.currentuser.CurrentUserDataStore
+import com.fuh.chattie.model.getNameOrDefault
+import com.fuh.chattie.model.getPhotoUriOrDefault
+import com.fuh.chattie.model.storage.ImageDataStore
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.fuh.chattie.util.ProgressNotificationManager
 import com.fuh.chattie.util.extentions.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.profile_activity.*
 
 /**
@@ -46,22 +52,15 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = ProfilePresenter(this, UserDataSource())
+        presenter = ProfilePresenter(
+                this,
+                CurrentUserDataStore(FirebaseAuth.getInstance()),
+                ImageDataStore(FirebaseStorage.getInstance())
+        )
         presenter.start()
 
         btnProfileLogout.setOnClickListener {
-            AuthUI.getInstance().signOut(this)
-                    .addOnCompleteListener {
-                        toast("You have been signed out.")
-
-                        // Close activity
-                        val intent = Intent(Intent.ACTION_MAIN)
-                                .apply {
-                                    addCategory(Intent.CATEGORY_HOME)
-                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                }
-                        startActivity(intent)
-                    }
+            signOut()
         }
 
         ivProfilePhoto.setOnClickListener {
@@ -77,11 +76,9 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.profile_menu_save -> {
+                val newUserName = etProfileName.textValue
 
-
-                val userName = etProfileName.textValue
-
-                presenter.updateUser(User(userName, newPhotoUri))
+                presenter.updateUser(CurrentUserChangeableModel(newUserName, newPhotoUri))
             }
         }
         return true
@@ -121,15 +118,15 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
     }
 
     override fun showUser(user: User) {
-        val photoUri = user.photoUri ?: resourceToUri(R.drawable.no_avatar)
-        ivProfilePhoto.loadImageByUri(photoUri)
-
-        val userName = user.name ?: getString(R.string.all_user_name_default)
+        val userName = user.getNameOrDefault(this)
         etProfileName.textValue = userName
+
+        val photoUri = user.getPhotoUriOrDefault(this)
+        ivProfilePhoto.loadImageByUri(photoUri)
     }
 
     override fun showUserUpdateStart() {
-        notificationManager.startDeterminate(
+        notificationManager.startIntermediate(
                 NOTIFICATION_PROFILE_UPDATE,
                 ProgressNotificationManager.Options("Uploading...", "Profile updating", R.mipmap.ic_launcher)
         )
@@ -144,5 +141,20 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
                 NOTIFICATION_PROFILE_UPDATE,
                 ProgressNotificationManager.Options("Uploading failed", "Profile updating", R.mipmap.ic_launcher)
         )
+    }
+
+    private fun signOut() {
+        AuthUI.getInstance().signOut(this)
+                .addOnCompleteListener {
+                    toast("You have been signed out.")
+
+                    // Close activity
+                    val intent = Intent(Intent.ACTION_MAIN)
+                            .apply {
+                                addCategory(Intent.CATEGORY_HOME)
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            }
+                    startActivity(intent)
+                }
     }
 }

@@ -5,7 +5,6 @@ package com.fuh.chattie.model
  */
 data class ChatMessage(
         var text: String? = null,
-        var user: String? = null,
-        var uid: String? = null,
+        var user: User? = null,
         var time: Long = 0
 )

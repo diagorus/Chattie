@@ -4,6 +4,9 @@ import android.support.v7.widget.RecyclerView
 import android.text.format.DateFormat
 import android.view.View
 import com.fuh.chattie.model.ChatMessage
+import com.fuh.chattie.model.getNameOrDefault
+import com.fuh.chattie.model.getPhotoUriOrDefault
+import com.fuh.chattie.util.extentions.loadImageByUri
 import kotlinx.android.synthetic.main.chat_item_incoming.view.*
 import kotlinx.android.synthetic.main.chat_item_outgoing.view.*
 
@@ -27,7 +30,12 @@ class ChatMessageIncomingViewHolder(itemView: View) : BaseChatViewHolder(itemVie
 
     override fun bind(message: ChatMessage) =
             with(itemView) {
-                tvChatItemIncomingName.text = message.user
+                val userName = message.user.getNameOrDefault(context)
+                tvChatItemIncomingName.text = userName
+
+                val photoUri = message.user.getPhotoUriOrDefault(context)
+                ivChatItemIncomingPhoto.loadImageByUri(photoUri)
+
                 tvChatItemIncomingMessage.text = message.text
                 tvChatItemIncomingTime.text = DateFormat.format("HH:mm", message.time)
             }

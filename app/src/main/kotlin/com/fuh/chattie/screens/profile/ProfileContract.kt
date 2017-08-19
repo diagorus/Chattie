@@ -1,5 +1,6 @@
 package com.fuh.chattie.screens.profile
 
+import com.fuh.chattie.model.CurrentUserChangeableModel
 import com.fuh.chattie.model.User
 import com.fuh.chattie.util.BasePresenter
 import com.fuh.chattie.util.BaseView
@@ -17,6 +18,6 @@ object ProfileContract {
 
     interface Presenter : BasePresenter {
         fun loadUser()
-        fun updateUser(user: User)
+        fun updateUser(changedUser: CurrentUserChangeableModel)
     }
 }

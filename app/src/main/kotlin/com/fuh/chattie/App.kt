@@ -9,8 +9,15 @@ import java.util.concurrent.TimeUnit
  * Created by lll on 11.08.2017.
  */
 class App : Application() {
+
+    companion object {
+        lateinit var appName: String
+    }
+
     override fun onCreate() {
         super.onCreate()
+
+        appName = resources.getString(R.string.app_name)
 
         if (BuildConfig.DEBUG) {
             initTimber()

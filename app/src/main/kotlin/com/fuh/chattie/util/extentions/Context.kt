@@ -64,7 +64,7 @@ fun Context.getFileInImages(name: String): File {
     return File(rootPath, name)
 }
 
-fun ImageView.loadImageByUri(uri: Uri) {
+fun ImageView.loadImageByUri(uri: Uri?) {
     val options = RequestOptions.circleCropTransform()
 
     Glide.with(context)

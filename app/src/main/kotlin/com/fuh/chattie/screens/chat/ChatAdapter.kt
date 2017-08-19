@@ -3,6 +3,7 @@ package com.fuh.chattie.screens.chat
 import android.view.ViewGroup
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.fuh.chattie.model.ChatMessage
+import com.fuh.chattie.model.User
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.Query
 
@@ -10,7 +11,7 @@ import com.google.firebase.database.Query
  * Created by lll on 15.08.2017.
  */
 class ChatAdapter(
-        private val user: FirebaseUser,
+        private val currentUser: User,
         query: Query
 ) : FirebaseRecyclerAdapter<ChatMessage, BaseChatViewHolder>(
         ChatMessage::class.java,
@@ -36,7 +37,7 @@ class ChatAdapter(
     }
 
     private fun decideViewType(item: ChatMessage): Int {
-        return if(user.uid == item.uid) {
+        return if(currentUser.id == item.user?.id) {
             ChatMessageViewHolderType.OUTGOING.layoutId
         } else {
             ChatMessageViewHolderType.INCOMING.layoutId
