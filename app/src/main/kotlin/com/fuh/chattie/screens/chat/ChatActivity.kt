@@ -9,9 +9,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import com.fuh.chattie.R
-import com.fuh.chattie.model.ChatMessage
+import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.currentuser.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.CurrentUserDataStore
 import com.fuh.chattie.screens.profile.ProfileActivity
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.fuh.chattie.util.extentions.textValue
@@ -70,8 +70,16 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
         rvChatMessages.adapter = chatMessageAdapter
         rvChatMessages.scrollEvents()
                 .map { with(layoutManager) { findLastVisibleItemPosition() == itemCount - 1 } }
-                .subscribe (
-                        { with(fabChatScrollToEnd) { if (it) { hide() } else { show() } } },
+                .subscribe(
+                        {
+                            with(fabChatScrollToEnd) {
+                                if (it) {
+                                    hide()
+                                } else {
+                                    show()
+                                }
+                            }
+                        },
                         { Timber.e(it) }
                 )
 
@@ -87,7 +95,7 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
         presenter.start()
 
         ivChatSend.setOnClickListener {
-            val message = ChatMessage(etChatInput.textValue, currentUser, Date().time)
+            val message = Message(currentUser.id, etChatInput.textValue, Date().time)
 
             presenter.pushMessage(message)
 

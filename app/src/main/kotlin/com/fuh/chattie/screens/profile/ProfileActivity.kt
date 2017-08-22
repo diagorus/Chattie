@@ -13,10 +13,10 @@ import com.firebase.ui.auth.AuthUI
 import com.fuh.chattie.R
 import com.fuh.chattie.model.CurrentUserChangeableModel
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.currentuser.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.CurrentUserDataStore
 import com.fuh.chattie.model.getNameOrDefault
 import com.fuh.chattie.model.getPhotoUriOrDefault
-import com.fuh.chattie.model.storage.ImageDataStore
+import com.fuh.chattie.model.datastore.ImageDataStore
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.fuh.chattie.util.ProgressNotificationManager
 import com.fuh.chattie.util.extentions.*

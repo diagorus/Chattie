@@ -1,4 +1,4 @@
-package com.fuh.chattie.model.storage
+package com.fuh.chattie.model.datastore
 
 import android.net.Uri
 import com.fuh.chattie.model.User
@@ -11,11 +11,16 @@ import java.util.*
  * Created by lll on 19.08.2017.
  */
 class ImageDataStore(private val firebaseStorage: FirebaseStorage) {
+
+    companion object {
+        private const val STORAGE_IMAGES = "images"
+    }
+
     fun uploadImage(user: User, uri: Uri): Single<Uri> {
         val photoName = UUID.randomUUID().toString()
 
         return firebaseStorage.reference
-                .child("images/")
+                .child(STORAGE_IMAGES)
                 .child(user.id!!)
                 .child(photoName)
                 .putFile(uri)

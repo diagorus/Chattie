@@ -1,4 +1,4 @@
-package com.fuh.chattie.model.currentuser
+package com.fuh.chattie.model.datastore
 
 import android.net.Uri
 import com.fuh.chattie.model.User
@@ -22,7 +22,7 @@ class CurrentUserDataStore(private val firebaseAuth: FirebaseAuth) {
     fun updateUser(user: User): Completable {
         val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(user.name)
-                .setPhotoUri(Uri.parse(user.photoUri))
+                .setPhotoUri(Uri.parse(user.photoUrl))
                 .build()
 
         return Completable.create { emitter ->

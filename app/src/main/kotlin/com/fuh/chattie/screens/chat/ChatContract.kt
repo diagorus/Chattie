@@ -1,6 +1,6 @@
 package com.fuh.chattie.screens.chat
 
-import com.fuh.chattie.model.ChatMessage
+import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.User
 import com.fuh.chattie.util.BasePresenter
 import com.fuh.chattie.util.BaseView
@@ -16,6 +16,6 @@ object ChatContract {
 
     interface Presenter : BasePresenter {
         fun loadChat()
-        fun pushMessage(message: ChatMessage)
+        fun pushMessage(message: Message)
     }
 }

@@ -6,10 +6,12 @@ import android.content.Intent
 import com.firebase.ui.auth.AuthUI
 import com.fuh.chattie.R
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.currentuser.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.UsersDataStore
 import com.fuh.chattie.screens.chat.ChatActivity
 import com.fuh.chattie.util.BaseActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import timber.log.Timber
 
 /**
@@ -43,7 +45,11 @@ class SplashActivity : BaseActivity(), SplashContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = SplashPresenter(this, CurrentUserDataStore(FirebaseAuth.getInstance()))
+        presenter = SplashPresenter(
+                this,
+                CurrentUserDataStore(FirebaseAuth.getInstance()),
+                UsersDataStore(FirebaseDatabase.getInstance())
+        )
         presenter.start()
     }
 
@@ -54,7 +60,7 @@ class SplashActivity : BaseActivity(), SplashContract.View {
             if (resultCode == Activity.RESULT_OK) {
                 Timber.d("User signed in")
 
-                presenter.checkUser()
+                presenter.saveCurrentUser()
             } else {
                 Timber.d("Sign in error")
 

@@ -3,10 +3,8 @@ package com.fuh.chattie.screens.profile
 import android.net.Uri
 import com.fuh.chattie.model.CurrentUserChangeableModel
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.currentuser.CurrentUserDataStore
-import com.fuh.chattie.model.storage.ImageDataStore
-import io.reactivex.Maybe
-import io.reactivex.Observable
+import com.fuh.chattie.model.datastore.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.ImageDataStore
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import timber.log.Timber
@@ -41,7 +39,7 @@ class ProfilePresenter(
 
         currentUser
                 .flatMap {
-                    if (it.photoUri == changedUser.photoUri.toString()) {
+                    if (it.photoUrl == changedUser.photoUri.toString()) {
                         Single.just(changedUser.photoUri!!)
                     } else {
                         imageModel.uploadImage(it, changedUser.photoUri!!)
@@ -50,13 +48,11 @@ class ProfilePresenter(
                 .zipWith(
                         currentUser,
                         BiFunction { newUri: Uri, user: User ->
-                            user.copy(photoUri = newUri.toString())
+                            user.copy(photoUrl = newUri.toString())
                         }
                 )
                 .flatMapCompletable { currentUserModel.updateUser(it) }
-                .doOnSubscribe {
-                    view.showUserUpdateStart()
-                }
+                .doOnSubscribe { view.showUserUpdateStart() }
                 .subscribe(
                         {
                             view.showUserUpdateComplete()

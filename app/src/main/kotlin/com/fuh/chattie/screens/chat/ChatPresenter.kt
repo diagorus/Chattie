@@ -1,8 +1,8 @@
 package com.fuh.chattie.screens.chat
 
-import com.fuh.chattie.model.ChatMessage
+import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.currentuser.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.CurrentUserDataStore
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import io.reactivex.Observable
@@ -34,7 +34,7 @@ class ChatPresenter(
                 .subscribe()
     }
 
-    override fun pushMessage(message: ChatMessage) {
+    override fun pushMessage(message: Message) {
         firebaseDatabase
                 .reference
                 .push()
