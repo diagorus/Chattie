@@ -50,7 +50,7 @@ class ChatRoomsActivity : BaseToolbarActivity(), ChatRoomsCotract.View {
 
         val layoutManager = LinearLayoutManager(this)
 
-        rvChatRooms.layoutManager = layoutMganager
+        rvChatRooms.layoutManager = layoutManager
         rvChatRooms.adapter = chatRoomsAdapter
     }
 
