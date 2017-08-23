@@ -10,7 +10,7 @@ import com.google.firebase.database.Query
  * Created by lll on 15.08.2017.
  */
 class ChatAdapter(
-        private val currentUser: User,
+        private val currentUserId: String,
         query: Query
 ) : FirebaseRecyclerAdapter<Message, BaseChatViewHolder>(
         Message::class.java,
@@ -36,7 +36,7 @@ class ChatAdapter(
     }
 
     private fun decideViewType(item: Message): Int {
-        return if(currentUser.id == item.userId) {
+        return if(currentUserId == item.userId) {
             ChatMessageViewHolderType.OUTGOING.layoutId
         } else {
             ChatMessageViewHolderType.INCOMING.layoutId

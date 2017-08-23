@@ -41,7 +41,7 @@ class CreateChatRoomActivity : BaseToolbarActivity(), CreateChatRoomContract.Vie
                 query
         ) {
             override fun populateViewHolder(viewHolder: UserItemViewHolder, model: User, position: Int) {
-                viewHolder.bind(model)
+                viewHolder.bind(model) {  }
             }
         }
 

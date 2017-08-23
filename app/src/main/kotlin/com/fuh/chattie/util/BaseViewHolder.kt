@@ -6,6 +6,6 @@ import android.view.View
 /**
  * Created by lll on 23.08.2017.
  */
-abstract class BaseViewHolder<in T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    abstract fun bind(data: T)
+abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    abstract fun bind(data: T, onClick: (T) -> Unit)
 }

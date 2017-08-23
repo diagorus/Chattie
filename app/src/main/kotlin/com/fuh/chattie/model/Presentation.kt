@@ -16,7 +16,7 @@ data class User(
 )
 
 data class ChatRoom(
-        var title: String?,
-        var lastMessage: Message,
-        var members: Map<String, Boolean>
+        var title: String? = null,
+        var lastMessage: Message? = null,
+        var members: Map<String, Boolean>? = null
 )

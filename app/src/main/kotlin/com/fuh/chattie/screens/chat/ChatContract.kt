@@ -11,11 +11,11 @@ import com.google.firebase.database.Query
  */
 object ChatContract {
     interface View : BaseView<Presenter> {
-        fun showChat(currentUser: User, query: Query)
+        fun showChat(currentUserId: String, query: Query)
     }
 
     interface Presenter : BasePresenter {
         fun loadChat()
-        fun pushMessage(message: Message)
+        fun pushMessage(messageText: String)
     }
 }

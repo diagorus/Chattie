@@ -10,10 +10,12 @@ import kotlinx.android.synthetic.main.chatroom_item.view.*
  */
 class ChatRoomViewHolder(itemView: View) : BaseViewHolder<ChatRoom>(itemView) {
 
-    override fun bind(data: ChatRoom) {
+    override fun bind(data: ChatRoom, onClick: (ChatRoom) -> Unit) {
         with(itemView) {
             tvChatRoomItemTitle.text = data.title
-            tvChatRoomItemLastMessage.text = data.lastMessage.text
+            tvChatRoomItemLastMessage.text = data.lastMessage?.text
+
+            setOnClickListener { onClick(data) }
         }
     }
 }

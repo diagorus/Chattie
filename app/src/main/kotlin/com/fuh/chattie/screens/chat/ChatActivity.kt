@@ -12,10 +12,13 @@ import com.fuh.chattie.R
 import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.User
 import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
+import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
+import com.fuh.chattie.model.datastore.MessagesDataStore
 import com.fuh.chattie.screens.profile.ProfileActivity
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.fuh.chattie.util.extentions.textValue
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.jakewharton.rxbinding2.support.v7.widget.scrollEvents
 import kotlinx.android.synthetic.main.chat_activity.*
@@ -29,14 +32,18 @@ import java.util.*
 class ChatActivity : BaseToolbarActivity(), ChatContract.View {
 
     companion object {
-        fun newIntent(context: Context): Intent =
+        private const val EXTRA_CHAT_ROOM_ID = "EXTRA_CHAT_ROOM_ID"
+
+        fun newIntent(context: Context, chatRoomId: String): Intent =
                 Intent(context, ChatActivity::class.java)
+                        .apply {
+                            putExtra(EXTRA_CHAT_ROOM_ID, chatRoomId)
+                        }
     }
 
     override lateinit var presenter: ChatContract.Presenter
 
     private lateinit var chatMessageAdapter: ChatAdapter
-    private lateinit var currentUser: User
 
     override fun getLayoutId(): Int = R.layout.chat_activity
 
@@ -44,9 +51,8 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
         title = "Chat"
     }
 
-    override fun showChat(currentUser: User, query: Query) {
-        this.currentUser = currentUser
-        chatMessageAdapter = ChatAdapter(currentUser, query)
+    override fun showChat(currentUserId: String, query: Query) {
+        chatMessageAdapter = ChatAdapter(currentUserId, query)
 
         val layoutManager = LinearLayoutManager(this)
                 .apply { stackFromEnd = true }
@@ -91,13 +97,20 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = ChatPresenter(this, CurrentUserAuthDataStore(FirebaseAuth.getInstance()))
+        val chatRoomId = getChatRoomId()
+
+        presenter = ChatPresenter(
+                this,
+                CurrentUserIdDataStore(this),
+                MessagesDataStore(FirebaseDatabase.getInstance()),
+                ChatPresenter.Parameters(chatRoomId)
+        )
         presenter.start()
 
         ivChatSend.setOnClickListener {
-            val message = Message(currentUser.id, etChatInput.textValue, Date().time)
+            val messageText = etChatInput.textValue
 
-            presenter.pushMessage(message)
+            presenter.pushMessage(messageText)
 
             clearInput()
         }
@@ -126,5 +139,10 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
 
     private fun clearInput() {
         etChatInput.setText("")
+    }
+
+    private fun getChatRoomId(): String {
+        return intent?.extras?.getString(EXTRA_CHAT_ROOM_ID) ?:
+                throw IllegalArgumentException("EXTRA_CHAT_ROOM_ID not set")
     }
 }

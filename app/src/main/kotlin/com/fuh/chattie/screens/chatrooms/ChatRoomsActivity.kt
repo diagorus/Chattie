@@ -12,6 +12,7 @@ import com.fuh.chattie.R
 import com.fuh.chattie.model.ChatRoom
 import com.fuh.chattie.model.datastore.ChatRoomDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
+import com.fuh.chattie.screens.chat.ChatActivity
 import com.fuh.chattie.screens.createchatroom.CreateChatRoomActivity
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.google.firebase.database.FirebaseDatabase
@@ -29,6 +30,7 @@ class ChatRoomsActivity : BaseToolbarActivity(), ChatRoomsCotract.View {
     }
 
     override lateinit var presenter: ChatRoomsCotract.Presenter
+    private lateinit var chatRoomsAdapter: FirebaseRecyclerAdapter<ChatRoom, ChatRoomViewHolder>
 
     override fun getLayoutId(): Int = R.layout.chatrooms_activity
 
@@ -37,14 +39,19 @@ class ChatRoomsActivity : BaseToolbarActivity(), ChatRoomsCotract.View {
     }
 
     override fun showChatRooms(query: Query) {
-        val chatRoomsAdapter = object : FirebaseRecyclerAdapter<ChatRoom, ChatRoomViewHolder>(
+        chatRoomsAdapter = object : FirebaseRecyclerAdapter<ChatRoom, ChatRoomViewHolder>(
                 ChatRoom::class.java,
                 R.layout.chatroom_item,
                 ChatRoomViewHolder::class.java,
                 query
         ) {
             override fun populateViewHolder(viewHolder: ChatRoomViewHolder, model: ChatRoom, position: Int) {
-                viewHolder.bind(model)
+                viewHolder.bind(model) {
+                    val chatRoomId = chatRoomsAdapter.getRef(position).key
+
+                    val intent = ChatActivity.newIntent(this@ChatRoomsActivity, chatRoomId)
+                    startActivity(intent)
+                }
             }
         }
 

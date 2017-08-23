@@ -11,7 +11,8 @@ import kotlinx.android.synthetic.main.user_item.view.*
  * Created by lll on 23.08.2017.
  */
 class UserItemViewHolder(itemView: View) : BaseViewHolder<User>(itemView) {
-    override fun bind(data: User) {
+
+    override fun bind(data: User, onClick: (User) -> Unit) {
         with(itemView) {
             tvUserItemName.text = data.name
 
