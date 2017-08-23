@@ -74,8 +74,8 @@ dependencies {
     // FirebaseUI Auth only
     compile "com.firebaseui:firebase-ui-auth:$firebase_ui_version"
 
-//    // FirebaseUI Storage only
-//    compile "com.firebaseui:firebase-ui-storage:$firebase_ui_version"
+    // FirebaseUI Storage only
+    compile "com.firebaseui:firebase-ui-storage:$firebase_ui_version"
 }
 
 buildscript {
@@ -90,7 +90,7 @@ buildscript {
         glide_transformations_version = '2.0.2'
         timber_version = '4.5.1'
         firebase_version = '11.0.4'
-        firebase_ui_version = '2.2.0'
+        firebase_ui_version = '2.3.0'
     }
 }
 

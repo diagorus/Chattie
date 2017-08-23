@@ -13,7 +13,7 @@ import com.firebase.ui.auth.AuthUI
 import com.fuh.chattie.R
 import com.fuh.chattie.model.CurrentUserChangeableModel
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.datastore.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
 import com.fuh.chattie.model.getNameOrDefault
 import com.fuh.chattie.model.getPhotoUriOrDefault
 import com.fuh.chattie.model.datastore.ImageDataStore
@@ -54,7 +54,7 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
 
         presenter = ProfilePresenter(
                 this,
-                CurrentUserDataStore(FirebaseAuth.getInstance()),
+                CurrentUserAuthDataStore(FirebaseAuth.getInstance()),
                 ImageDataStore(FirebaseStorage.getInstance())
         )
         presenter.start()

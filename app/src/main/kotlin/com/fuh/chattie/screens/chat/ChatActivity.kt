@@ -11,7 +11,7 @@ import android.view.MenuItem
 import com.fuh.chattie.R
 import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.datastore.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
 import com.fuh.chattie.screens.profile.ProfileActivity
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.fuh.chattie.util.extentions.textValue
@@ -91,7 +91,7 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = ChatPresenter(this, CurrentUserDataStore(FirebaseAuth.getInstance()))
+        presenter = ChatPresenter(this, CurrentUserAuthDataStore(FirebaseAuth.getInstance()))
         presenter.start()
 
         ivChatSend.setOnClickListener {

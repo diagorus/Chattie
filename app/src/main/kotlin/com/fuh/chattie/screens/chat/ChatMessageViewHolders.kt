@@ -4,10 +4,6 @@ import android.support.v7.widget.RecyclerView
 import android.text.format.DateFormat
 import android.view.View
 import com.fuh.chattie.model.Message
-import com.fuh.chattie.model.UserMessage
-import com.fuh.chattie.model.getNameOrDefault
-import com.fuh.chattie.model.getPhotoUriOrDefault
-import com.fuh.chattie.util.extentions.loadImageByUri
 import kotlinx.android.synthetic.main.chat_item_incoming.view.*
 import kotlinx.android.synthetic.main.chat_item_outgoing.view.*
 

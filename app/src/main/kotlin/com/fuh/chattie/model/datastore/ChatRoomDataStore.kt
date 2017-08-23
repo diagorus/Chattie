@@ -3,14 +3,11 @@ package com.fuh.chattie.model.datastore
 import com.fuh.chattie.model.ChatRoom
 import com.fuh.chattie.util.extentions.observeCompletion
 import com.fuh.chattie.util.extentions.observeInitial
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import io.reactivex.Completable
 import io.reactivex.Single
 import com.google.firebase.auth.FirebaseAuth
 import android.text.TextUtils
+import com.google.firebase.database.*
 import io.reactivex.Observable
 
 
@@ -23,50 +20,48 @@ class ChatRoomDataStore(private val firebaseDatabase: FirebaseDatabase) {
         private const val DATABASE_CHAT_ROOMS = "chat_rooms"
     }
 
-    fun postChatRoom(chatRoom: ChatRoom): Completable {
+    fun postChatRoom(userId: String,chatRoom: ChatRoom): Completable {
         return firebaseDatabase
                 .reference
                 .child(DATABASE_CHAT_ROOMS)
+                .child(userId)
                 .push()
                 .setValue(chatRoom)
                 .observeCompletion()
     }
 
-    fun getChatRoom(id: String): Single<ChatRoom> {
-        return firebaseDatabase
-                .reference
-                .child(DATABASE_CHAT_ROOMS)
-                .child(id)
-                .observeInitial()
-    }
+    fun getAllChatRooms(userId: String): Observable<ChatRoom> {
+        return Observable.create { emitter ->
+            firebaseDatabase
+                    .reference
+                    .child(DATABASE_CHAT_ROOMS)
+                    .child(userId)
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val dataSnapshots = dataSnapshot.children.iterator()
 
-    fun getAllChatRooms(): Observable<ChatRoom> {
-        firebaseDatabase
-                .reference
-                .child(DATABASE_CHAT_ROOMS)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val dataSnapshots = dataSnapshot.children.iterator()
+                            while (dataSnapshots.hasNext()) {
+                                val dataSnapshotChild = dataSnapshots.next()
 
-                        while (dataSnapshots.hasNext()) {
-                            val dataSnapshotChild = dataSnapshots.next()
+                                val chatRoom = dataSnapshotChild.getValue<ChatRoom>(ChatRoom::class.java)
 
-                            val user = dataSnapshotChild.getValue<ChatRoom>(ChatRoom::class.java)
-
-                            if (!TextUtils.equals(user!!.uid,
-                                    FirebaseAuth.getInstance().currentUser!!.uid)) {
-                                users.add(user)
+                                chatRoom?.let {
+                                    emitter.onNext(chatRoom)
+                                } ?: emitter.onError(IllegalStateException("No data found, chatRoom is null"))
                             }
                         }
 
-                        data?.let {
-                            emitter.onSuccess(data)
-                        } ?: emitter.onError(IllegalStateException("No data found"))
-                    }
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            emitter.onError(databaseError.toException())
+                        }
+                    })
+        }
+    }
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        emitter.onError(databaseError.toException())
-                    }
-                })
+    fun getAllChatRoomsQuery(userId: String): Query {
+        return firebaseDatabase
+                .reference
+                .child(DATABASE_CHAT_ROOMS)
+                .child(userId)
     }
 }

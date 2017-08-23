@@ -3,7 +3,7 @@ package com.fuh.chattie.screens.profile
 import android.net.Uri
 import com.fuh.chattie.model.CurrentUserChangeableModel
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.datastore.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
 import com.fuh.chattie.model.datastore.ImageDataStore
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
@@ -14,7 +14,7 @@ import timber.log.Timber
  */
 class ProfilePresenter(
         private val view: ProfileContract.View,
-        private val currentUserModel: CurrentUserDataStore,
+        private val currentUserAuthModel: CurrentUserAuthDataStore,
         private val imageModel: ImageDataStore
         ) : ProfileContract.Presenter {
 
@@ -23,7 +23,7 @@ class ProfilePresenter(
     }
 
     override fun loadUser() {
-        currentUserModel.getUser()
+        currentUserAuthModel.getUser()
                 .subscribe(
                         {
                             view.showUser(it)
@@ -35,7 +35,7 @@ class ProfilePresenter(
     }
 
     override fun updateUser(changedUser: CurrentUserChangeableModel) {
-        val currentUser = currentUserModel.getUser()
+        val currentUser = currentUserAuthModel.getUser()
 
         currentUser
                 .flatMap {
@@ -51,7 +51,7 @@ class ProfilePresenter(
                             user.copy(photoUrl = newUri.toString())
                         }
                 )
-                .flatMapCompletable { currentUserModel.updateUser(it) }
+                .flatMapCompletable { currentUserAuthModel.updateUser(it) }
                 .doOnSubscribe { view.showUserUpdateStart() }
                 .subscribe(
                         {

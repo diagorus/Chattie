@@ -1,9 +1,8 @@
 package com.fuh.chattie.screens.splash
 
-import com.fuh.chattie.model.User
-import com.fuh.chattie.model.datastore.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
+import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
-import com.google.firebase.auth.FirebaseUser
 import timber.log.Timber
 
 /**
@@ -11,7 +10,8 @@ import timber.log.Timber
  */
 class SplashPresenter(
         private val view: SplashContract.View,
-        private val currentUserDataSource: CurrentUserDataStore,
+        private val currentUserIdDataStore: CurrentUserIdDataStore,
+        private val currentUserAuthDataSource: CurrentUserAuthDataStore,
         private val usersDataStore: UsersDataStore
 ) : SplashContract.Presenter {
 
@@ -20,9 +20,11 @@ class SplashPresenter(
     }
 
     override fun checkUser() {
-        currentUserDataSource.getUser()
+        currentUserAuthDataSource.getUser()
                 .subscribe(
-                        { view.showUserSigned(it) },
+                        {
+                            view.showUserSigned(it)
+                        },
                         {
                             Timber.e(it)
                             view.showUserNotSigned()
@@ -31,8 +33,9 @@ class SplashPresenter(
     }
 
     override fun saveCurrentUser() {
-        currentUserDataSource.getUser()
+        currentUserAuthDataSource.getUser()
                 .doOnSuccess { usersDataStore.postUser(it) }
+                .doOnSuccess { currentUserIdDataStore.setCurrentUserId(it.id!!) }
                 .subscribe(
                         { view.showUserSigned(it) },
                         {

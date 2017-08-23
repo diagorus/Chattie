@@ -2,7 +2,7 @@ package com.fuh.chattie.screens.chat
 
 import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.User
-import com.fuh.chattie.model.datastore.CurrentUserDataStore
+import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import io.reactivex.Observable
@@ -13,7 +13,7 @@ import io.reactivex.functions.BiFunction
  */
 class ChatPresenter(
         private val view: ChatContract.View,
-        private val currentUserDataStore: CurrentUserDataStore
+        private val currentUserAuthDataStore: CurrentUserAuthDataStore
 ) : ChatContract.Presenter {
     private val firebaseDatabase = FirebaseDatabase.getInstance()
 
@@ -22,7 +22,7 @@ class ChatPresenter(
     }
 
     override fun loadChat() {
-        val currentUser = currentUserDataStore.getUser().toObservable()
+        val currentUser = currentUserAuthDataStore.getUser().toObservable()
         val query = Observable.just(firebaseDatabase.reference)
         Observable.zip<User, Query, Unit>(
                 currentUser,

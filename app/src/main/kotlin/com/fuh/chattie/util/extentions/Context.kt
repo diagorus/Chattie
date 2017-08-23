@@ -72,3 +72,12 @@ fun ImageView.loadImageByUri(uri: Uri?) {
             .apply(options)
             .into(this)
 }
+
+fun ImageView.loadFirebaseImageByUri(uri: Uri?) {
+    val options = RequestOptions.circleCropTransform()
+
+    Glide.with(context)
+            .load(uri)
+            .apply(options)
+            .into(this)
+}
