@@ -1,6 +1,6 @@
 package com.fuh.chattie.screens.chatrooms
 
-import com.fuh.chattie.model.datastore.ChatRoomDataStore
+import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 
 /**
@@ -9,7 +9,7 @@ import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 class ChatRoomsPresenter(
         private val view: ChatRoomsCotract.View,
         private val currentUserIdDataStore: CurrentUserIdDataStore,
-        private val chatRoomDataStore: ChatRoomDataStore
+        private val chatRoomsDataStore: ChatRoomsDataStore
 ) : ChatRoomsCotract.Presenter {
 
     override fun start() {
@@ -18,7 +18,7 @@ class ChatRoomsPresenter(
 
     override fun loadChatRooms() {
         val userId = currentUserIdDataStore.getCurrentUserId()
-        val chatRoomsQuery = chatRoomDataStore.getAllChatRoomsQuery(userId)
+        val chatRoomsQuery = chatRoomsDataStore.getAllChatRoomsQuery(userId)
 
         view.showChatRooms(chatRoomsQuery)
     }

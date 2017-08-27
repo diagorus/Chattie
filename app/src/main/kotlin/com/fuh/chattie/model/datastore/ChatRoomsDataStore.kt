@@ -14,13 +14,9 @@ import io.reactivex.Observable
 /**
  * Created by lll on 22.08.2017.
  */
-class ChatRoomDataStore(private val firebaseDatabase: FirebaseDatabase) {
+class ChatRoomsDataStore(private val firebaseDatabase: FirebaseDatabase) {
 
-    companion object {
-        private const val DATABASE_CHAT_ROOMS = "chat_rooms"
-    }
-
-    fun postChatRoom(userId: String,chatRoom: ChatRoom): Completable {
+    fun postChatRoom(userId: String, chatRoom: ChatRoom): Completable {
         return firebaseDatabase
                 .reference
                 .child(DATABASE_CHAT_ROOMS)

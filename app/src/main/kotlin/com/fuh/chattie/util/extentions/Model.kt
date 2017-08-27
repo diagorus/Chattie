@@ -1,5 +1,9 @@
 package com.fuh.chattie.util.extentions
 
+import android.content.Context
+import android.net.Uri
+import com.fuh.chattie.R
+import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.User
 import com.google.gson.Gson
 
@@ -9,3 +13,17 @@ import com.google.gson.Gson
 inline fun <T> T?.toJson(): String? = Gson().toJson(this)
 
 inline fun <reified T> String?.fromJson(): T? = Gson().fromJson(this, T::class.java)
+
+fun User?.getNameOrDefault(ctx: Context): String =
+        this?.name ?: ctx.getString(R.string.all_user_name_default)
+
+fun User?.getPhotoUriOrDefault(ctx: Context): Uri =
+        Uri.parse(this?.photoUrl) ?: ctx.resourceToUri(R.drawable.no_avatar)
+
+fun Message?.toMap(): Map<String, Any?> {
+    return mapOf(
+            "userId" to this?.userId,
+            "text" to this?.text,
+            "time" to this?.time
+    )
+}

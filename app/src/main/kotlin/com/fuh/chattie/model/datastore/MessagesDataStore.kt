@@ -2,6 +2,7 @@ package com.fuh.chattie.model.datastore
 
 import com.fuh.chattie.model.Message
 import com.fuh.chattie.util.extentions.observeCompletion
+import com.fuh.chattie.util.extentions.toMap
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import io.reactivex.Completable
@@ -11,18 +12,22 @@ import io.reactivex.Completable
  */
 class MessagesDataStore(private val firebaseDatabase: FirebaseDatabase) {
 
-    companion object {
-        private const val DATABASE_MESSAGES = "messages"
-    }
-
-    fun postMessage(chatRoomId: String, message: Message): Completable {
-        return firebaseDatabase
+    fun postMessage(chatRoomId: String, message: Message) {
+        val messageId = firebaseDatabase
                 .reference
                 .child(DATABASE_MESSAGES)
                 .child(chatRoomId)
                 .push()
-                .setValue(message)
-                .observeCompletion()
+                .key
+
+        val messageValues = message.toMap()
+
+        val childUpdates = mapOf(
+                "$DATABASE_MESSAGES/$chatRoomId/$messageId" to messageValues,
+                "$DATABASE_CHAT_ROOMS/${message.userId}/$chatRoomId/lastMessage" to messageValues
+        )
+
+        firebaseDatabase.reference.updateChildren(childUpdates)
     }
 
     fun getAllMessagesQuery(chatRoomId: String): Query {

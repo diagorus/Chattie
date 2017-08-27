@@ -1,14 +1,9 @@
 package com.fuh.chattie.screens.chat
 
 import com.fuh.chattie.model.Message
-import com.fuh.chattie.model.User
-import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
+import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.MessagesDataStore
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.Query
-import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
 import java.util.*
 
 /**
