@@ -14,6 +14,6 @@ object CreateChatRoomContract {
     }
 
     interface View : BaseView<Presenter> {
-        fun showUsers(query: Query)
+        fun showUsers(users: List<User>)
     }
 }

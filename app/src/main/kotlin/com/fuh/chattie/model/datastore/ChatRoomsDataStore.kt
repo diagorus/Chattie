@@ -2,11 +2,8 @@ package com.fuh.chattie.model.datastore
 
 import com.fuh.chattie.model.ChatRoom
 import com.fuh.chattie.util.extentions.observeCompletion
-import com.fuh.chattie.util.extentions.observeInitial
 import io.reactivex.Completable
-import io.reactivex.Single
-import com.google.firebase.auth.FirebaseAuth
-import android.text.TextUtils
+import com.fuh.chattie.model.DATABASE_CHAT_ROOMS
 import com.google.firebase.database.*
 import io.reactivex.Observable
 
@@ -45,6 +42,7 @@ class ChatRoomsDataStore(private val firebaseDatabase: FirebaseDatabase) {
                                     emitter.onNext(chatRoom)
                                 } ?: emitter.onError(IllegalStateException("No data found, chatRoom is null"))
                             }
+                            emitter.onComplete()
                         }
 
                         override fun onCancelled(databaseError: DatabaseError) {

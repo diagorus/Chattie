@@ -66,4 +66,5 @@
     <string name="photo_chooser_from_choose_gallery_program">Select picture from</string>
     <string name="all_user_name_default">Unknown</string>
     <string name="chatrooms_menu_add">Add</string>
+    <string name="createchatroom_menu_item_confirm">Confirm</string>
 </resources>

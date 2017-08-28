@@ -53,5 +53,9 @@
         <activity android:name=".screens.chatrooms.ChatRoomsActivity">
 
         </activity>
+
+        <activity android:name=".screens.createchatroom.CreateChatRoomActivity">
+
+        </activity>
     </application>
 </manifest>

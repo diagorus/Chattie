@@ -10,9 +10,12 @@ import android.view.MenuItem
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.fuh.chattie.R
 import com.fuh.chattie.model.ChatRoom
+import com.fuh.chattie.model.DATABASE_USERS
+import com.fuh.chattie.model.User
 import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.screens.chat.ChatActivity
+import com.fuh.chattie.screens.createchatroom.CreateChatRoomActivity
 import com.fuh.chattie.util.BaseToolbarActivity
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
@@ -78,9 +81,17 @@ class ChatRoomsActivity : BaseToolbarActivity(), ChatRoomsCotract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.chatrooms_menu_add -> {
-//                val intent = CreateChatRoomActivity.newIntent(this)
+                val intent = CreateChatRoomActivity.newIntent(this)
+
+                startActivity(intent)
+//                val users = FirebaseDatabase.getInstance()
+//                        .reference
+//                        .child(DATABASE_USERS)
 //
-//                startActivity(intent)
+//                for (i in 0..30) {
+//                    val id = "id$i"
+//                    users.child(id).setValue(User(id, "name$i"))
+//                }
             }
         }
         return true

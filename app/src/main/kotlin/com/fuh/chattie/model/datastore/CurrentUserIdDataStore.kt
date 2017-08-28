@@ -16,9 +16,8 @@ class CurrentUserIdDataStore(ctx: Context) {
         ctx.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)
     }
 
-    fun getCurrentUserId(): String {
-        return preferences.getString(PREFERENCES_USER_ID, "-1")
-    }
+    fun getCurrentUserId(): String =
+            preferences.getString(PREFERENCES_USER_ID, "-1")
 
     fun setCurrentUserId(userId: String) {
         preferences.edit()

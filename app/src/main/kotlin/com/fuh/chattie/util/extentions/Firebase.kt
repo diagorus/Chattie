@@ -1,6 +1,7 @@
 package com.fuh.chattie.util.extentions
 
 import android.net.Uri
+import com.fuh.chattie.model.ChatRoom
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -51,6 +52,33 @@ inline fun <reified T> DatabaseReference.observeInitial(): Single<T> {
                         data?.let {
                             emitter.onSuccess(data)
                         } ?: emitter.onError(IllegalStateException("No data found"))
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        emitter.onError(databaseError.toException())
+                    }
+                })
+    }
+}
+
+inline fun <reified T> DatabaseReference.observeAll(): Observable<T> {
+    return Observable.create { emitter ->
+        this
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val dataSnapshots = dataSnapshot.children.iterator()
+
+                        while (dataSnapshots.hasNext()) {
+                            val dataSnapshotChild = dataSnapshots.next()
+
+                            val child = dataSnapshotChild.getValue(T::class.java)
+
+                            child?.let {
+                                emitter.onNext(child)
+                            } ?: emitter.onError(IllegalStateException("No data found, ${T::class.java.simpleName} is null"))
+                        }
+
+                        emitter.onComplete()
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {

@@ -5,16 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import com.firebase.ui.database.FirebaseRecyclerAdapter
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
 import com.fuh.chattie.R
 import com.fuh.chattie.model.User
-import com.fuh.chattie.screens.chat.ChatAdapter
+import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
+import com.fuh.chattie.model.datastore.UsersDataStore
 import com.fuh.chattie.util.BaseToolbarActivity
-import com.google.firebase.database.Query
-import com.jakewharton.rxbinding2.support.v7.widget.scrollEvents
-import kotlinx.android.synthetic.main.chat_activity.*
-import timber.log.Timber
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.createchatroom_activity.*
 
 /**
  * Created by lll on 23.08.2017.
@@ -31,29 +31,26 @@ class CreateChatRoomActivity : BaseToolbarActivity(), CreateChatRoomContract.Vie
 
     override fun ActionBar.init() {
         title = "Create chat room"
+        setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun showUsers(query: Query) {
-        val usersAdapter = object : FirebaseRecyclerAdapter<User, UserItemViewHolder>(
-                User::class.java,
-                R.layout.user_item,
-                UserItemViewHolder::class.java,
-                query
-        ) {
-            override fun populateViewHolder(viewHolder: UserItemViewHolder, model: User, position: Int) {
-                viewHolder.bind(model) {  }
-            }
-        }
+    override fun showUsers(users: List<User>) {
+        val usersAdapter = UsersAdapter(users)
 
         val layoutManager = LinearLayoutManager(this)
 
-        rvChatMessages.layoutManager = layoutManager
-        rvChatMessages.adapter = usersAdapter
+        rvCreateChatRoomUserList.layoutManager = layoutManager
+        rvCreateChatRoomUserList.adapter = usersAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        presenter = CreateChatRoomPresenter(
+                this,
+                CurrentUserIdDataStore(this),
+                UsersDataStore(FirebaseDatabase.getInstance())
+        )
+        presenter.start()
     }
 }

@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="buttonStyle">@style/ButtonDefault</item>
         <item name="actionBarStyle">@style/ToolbarDefault</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="ButtonDefault" parent="Base.Widget.AppCompat.Button">
