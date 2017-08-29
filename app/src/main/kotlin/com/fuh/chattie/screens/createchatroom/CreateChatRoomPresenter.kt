@@ -31,12 +31,8 @@ class CreateChatRoomPresenter(
                 }
                 .toList()
                 .subscribe(
-                        { users ->
-                            view.showUsers(users)
-                        },
-                        {
-                            Timber.e(it)
-                        }
+                        { view.showUsers(it) },
+                        { Timber.e(it) }
                 )
 
         compositeDisposable.add(disposable)
