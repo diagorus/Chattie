@@ -1,12 +1,8 @@
-package com.fuh.chattie.util.extentions
+package com.fuh.chattie.utils.extentions
 
 import android.net.Uri
-import com.fuh.chattie.model.ChatRoom
 import com.google.android.gms.tasks.Task
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.storage.UploadTask
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -61,7 +57,7 @@ inline fun <reified T> DatabaseReference.observeInitial(): Single<T> {
     }
 }
 
-inline fun <reified T> DatabaseReference.observeAll(): Observable<T> {
+inline fun <reified T> DatabaseReference.observeAllValuesOnce(): Observable<T> {
     return Observable.create { emitter ->
         this
                 .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -79,6 +75,59 @@ inline fun <reified T> DatabaseReference.observeAll(): Observable<T> {
                         }
 
                         emitter.onComplete()
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        emitter.onError(databaseError.toException())
+                    }
+                })
+    }
+}
+
+fun Query.observeAllKeysOnce(): Observable<String> {
+    return Observable.create { emitter ->
+        this
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val dataSnapshots = dataSnapshot.children.iterator()
+
+                        while (dataSnapshots.hasNext()) {
+                            val dataSnapshotChild = dataSnapshots.next()
+                            val childKey = dataSnapshotChild.key
+
+                            childKey?.let {
+                                emitter.onNext(childKey)
+                            } ?: emitter.onError(IllegalStateException("Key is null"))
+                        }
+
+                        emitter.onComplete()
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        emitter.onError(databaseError.toException())
+                    }
+                })
+    }
+}
+//TODO: initial and for child addition different methodsgit ?
+inline fun <reified T> DatabaseReference.observeAllValuesContinuously(): Observable<T> {
+    return Observable.create { emitter ->
+        this
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                        val dataSnapshots = dataSnapshot.children.iterator()
+//
+//                        while (dataSnapshots.hasNext()) {
+//                            val dataSnapshotChild = dataSnapshots.next()
+//
+//                            val child = dataSnapshotChild.getValue(T::class.java)
+//
+//                            child?.let {
+//                                emitter.onNext(child)
+//                            } ?: emitter.onError(IllegalStateException("No data found, ${T::class.java.simpleName} is null"))
+//                        }
+//
+//                        emitter.onComplete()
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {

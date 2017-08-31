@@ -20,3 +20,9 @@ data class ChatRoom(
         var lastMessage: Message? = null,
         var members: Map<String, Boolean>? = null
 )
+
+data class MessagePres(
+        var user: User? = null,
+        var text: String? = null,
+        var time: Long = 0
+)

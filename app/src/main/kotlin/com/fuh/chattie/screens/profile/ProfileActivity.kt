@@ -15,9 +15,9 @@ import com.fuh.chattie.model.CurrentUserChangeableModel
 import com.fuh.chattie.model.User
 import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
 import com.fuh.chattie.model.datastore.ImageDataStore
-import com.fuh.chattie.util.BaseToolbarActivity
-import com.fuh.chattie.util.ProgressNotificationManager
-import com.fuh.chattie.util.extentions.*
+import com.fuh.chattie.utils.BaseToolbarActivity
+import com.fuh.chattie.utils.ProgressNotificationManager
+import com.fuh.chattie.utils.extentions.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.profile_activity.*
@@ -87,12 +87,8 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
 
         if (resultCode == Activity.RESULT_OK) {
             when(requestCode) {
-                REQUEST_CAMERA -> {
-                    newPhotoUri = uriForCameraPhoto
-                }
-                REQUEST_GALLERY -> {
-                    newPhotoUri = data?.data
-                }
+                REQUEST_CAMERA -> { newPhotoUri = uriForCameraPhoto }
+                REQUEST_GALLERY -> { newPhotoUri = data?.data }
             }
 
             newPhotoUri?.let {
@@ -106,7 +102,6 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         val isPermissionsGranted = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-
         if (isPermissionsGranted) {
             when(requestCode) {
                 REQUEST_PERMISSION_CAMERA -> startCamera(uriForCameraPhoto)

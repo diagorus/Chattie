@@ -1,9 +1,11 @@
 package com.fuh.chattie.model.datastore
 
 import com.fuh.chattie.model.ChatRoom
-import com.fuh.chattie.util.extentions.observeCompletion
+import com.fuh.chattie.model.datastore.contracts.DATABASE_CHAT_ROOMS
+import com.fuh.chattie.model.datastore.contracts.DATABASE_CHAT_ROOMS_MEMBERS
+import com.fuh.chattie.utils.extentions.observeAllKeysOnce
+import com.fuh.chattie.utils.extentions.observeCompletion
 import io.reactivex.Completable
-import com.fuh.chattie.model.DATABASE_CHAT_ROOMS
 import com.google.firebase.database.*
 import io.reactivex.Observable
 
@@ -57,5 +59,15 @@ class ChatRoomsDataStore(private val firebaseDatabase: FirebaseDatabase) {
                 .reference
                 .child(DATABASE_CHAT_ROOMS)
                 .child(userId)
+    }
+
+    fun getAllMemberIds(userId: String, chatRoomId: String): Observable<String> {
+        return firebaseDatabase
+                .reference
+                .child(DATABASE_CHAT_ROOMS)
+                .child(userId)
+                .child(chatRoomId)
+                .child(DATABASE_CHAT_ROOMS_MEMBERS)
+                .observeAllKeysOnce()
     }
 }

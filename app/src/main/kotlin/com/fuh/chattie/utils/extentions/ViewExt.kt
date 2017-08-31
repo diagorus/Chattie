@@ -1,4 +1,4 @@
-package com.fuh.chattie.util.extentions
+package com.fuh.chattie.utils.extentions
 
 import android.content.Context
 import android.support.design.widget.TextInputLayout

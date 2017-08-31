@@ -1,4 +1,4 @@
-package com.fuh.chattie.util.extentions
+package com.fuh.chattie.utils.extentions
 
 import android.app.Fragment
 import android.content.Context

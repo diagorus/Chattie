@@ -1,9 +1,8 @@
 package com.fuh.chattie.screens.splash
 
 import com.fuh.chattie.model.User
-import com.fuh.chattie.util.BasePresenter
-import com.fuh.chattie.util.BaseView
-import com.google.firebase.auth.FirebaseUser
+import com.fuh.chattie.utils.BasePresenter
+import com.fuh.chattie.utils.BaseView
 
 /**
  * Created by lll on 18.08.2017.

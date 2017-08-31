@@ -1,4 +1,4 @@
-package com.fuh.chattie.util
+package com.fuh.chattie.utils
 
 import android.app.Notification
 import android.app.NotificationManager

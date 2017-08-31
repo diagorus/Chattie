@@ -1,6 +1,6 @@
-package com.fuh.chattie.util.validation
+package com.fuh.chattie.utils.validation
 
-import com.fuh.chattie.util.validation.FieldValidationResponse.VALID
+import com.fuh.chattie.utils.validation.FieldValidationResponse.VALID
 
 data class LoginValidationResponse(
         val email: FieldValidationResponse = VALID,

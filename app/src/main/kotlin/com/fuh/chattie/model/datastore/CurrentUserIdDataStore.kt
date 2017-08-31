@@ -1,16 +1,13 @@
 package com.fuh.chattie.model.datastore
 
 import android.content.Context
+import com.fuh.chattie.model.datastore.contracts.PREFERENCES_FILE_NAME
+import com.fuh.chattie.model.datastore.contracts.PREFERENCES_USER_ID
 
 /**
  * Created by lll on 23.08.2017.
  */
 class CurrentUserIdDataStore(ctx: Context) {
-
-    companion object {
-        private const val PREFERENCES_FILE_NAME = "VALUES"
-        private const val PREFERENCES_USER_ID = "PREFERENCES_USER_ID"
-    }
 
     private val preferences by lazy {
         ctx.getSharedPreferences(PREFERENCES_FILE_NAME, Context.MODE_PRIVATE)

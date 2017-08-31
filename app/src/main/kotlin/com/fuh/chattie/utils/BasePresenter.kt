@@ -1,4 +1,4 @@
-package com.fuh.chattie.util
+package com.fuh.chattie.utils
 
 /**
  * Created by lll on 10.08.2017.

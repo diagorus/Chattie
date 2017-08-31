@@ -1,9 +1,8 @@
 package com.fuh.chattie.screens.chat
 
-import com.fuh.chattie.model.Message
-import com.fuh.chattie.model.User
-import com.fuh.chattie.util.BasePresenter
-import com.fuh.chattie.util.BaseView
+import com.fuh.chattie.model.MessagePres
+import com.fuh.chattie.utils.BasePresenter
+import com.fuh.chattie.utils.BaseView
 import com.google.firebase.database.Query
 
 /**
@@ -12,6 +11,8 @@ import com.google.firebase.database.Query
 object ChatContract {
     interface View : BaseView<Presenter> {
         fun showChat(currentUserId: String, query: Query)
+        fun showChatInitial(currentUserId: String, messages: List<MessagePres>)
+        fun showChatNewMessage(message: MessagePres)
     }
 
     interface Presenter : BasePresenter {

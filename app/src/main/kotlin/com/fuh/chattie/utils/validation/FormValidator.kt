@@ -1,4 +1,4 @@
-package com.fuh.chattie.util.validation
+package com.fuh.chattie.utils.validation
 
 interface FormValidator {
     fun validateRegister(data: RegisterFormData): RegisterValidationResponse

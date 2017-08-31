@@ -11,6 +11,7 @@ import io.reactivex.Single
  * Created by lll on 18.08.2017.
  */
 class CurrentUserAuthDataStore(private val firebaseAuth: FirebaseAuth) {
+
     fun getUser(): Single<User> {
         return Single.create { emitter ->
             firebaseAuth.currentUser?.let { user ->

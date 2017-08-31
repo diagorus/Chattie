@@ -1,25 +1,18 @@
-package com.fuh.chattie.util.extentions
+package com.fuh.chattie.utils.extentions
 
-import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import android.content.ContentResolver
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.FileProvider
-import android.support.v7.app.AlertDialog
 import android.util.TypedValue
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuh.chattie.R
-import kotlinx.android.synthetic.main.profile_activity.*
 import java.io.File
 
 

@@ -10,13 +10,11 @@ import android.view.MenuItem
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.fuh.chattie.R
 import com.fuh.chattie.model.ChatRoom
-import com.fuh.chattie.model.DATABASE_USERS
-import com.fuh.chattie.model.User
 import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.screens.chat.ChatActivity
 import com.fuh.chattie.screens.createchatroom.CreateChatRoomActivity
-import com.fuh.chattie.util.BaseToolbarActivity
+import com.fuh.chattie.utils.BaseToolbarActivity
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import kotlinx.android.synthetic.main.chatrooms_activity.*

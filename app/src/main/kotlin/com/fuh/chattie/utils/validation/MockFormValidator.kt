@@ -1,4 +1,4 @@
-package com.fuh.chattie.util.validation
+package com.fuh.chattie.utils.validation
 
 class MockFormValidator: FormValidator {
     override fun validateRegister(data: RegisterFormData) = RegisterValidationResponse()

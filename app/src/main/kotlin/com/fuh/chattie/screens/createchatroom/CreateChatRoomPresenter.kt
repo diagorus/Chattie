@@ -2,8 +2,7 @@ package com.fuh.chattie.screens.createchatroom
 
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
-import com.fuh.chattie.util.BasePresenter
-import com.fuh.chattie.util.BaseRxPresenter
+import com.fuh.chattie.utils.BaseRxPresenter
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 

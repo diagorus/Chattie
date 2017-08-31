@@ -1,6 +1,6 @@
-package com.fuh.chattie.util.validation
+package com.fuh.chattie.utils.validation
 
-import com.fuh.chattie.util.validation.FieldValidationResponse.*
+import com.fuh.chattie.utils.validation.FieldValidationResponse.*
 
 //TODO: change name!!!
 class RefinedFormValidator : FormValidator {

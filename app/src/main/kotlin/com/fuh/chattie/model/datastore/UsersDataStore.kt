@@ -1,10 +1,11 @@
 package com.fuh.chattie.model.datastore
 
-import com.fuh.chattie.model.DATABASE_USERS
 import com.fuh.chattie.model.User
-import com.fuh.chattie.util.extentions.observeAll
-import com.fuh.chattie.util.extentions.observeCompletion
-import com.fuh.chattie.util.extentions.observeInitial
+import com.fuh.chattie.model.UserRaw
+import com.fuh.chattie.model.datastore.contracts.DATABASE_USERS
+import com.fuh.chattie.utils.extentions.observeAllValuesOnce
+import com.fuh.chattie.utils.extentions.observeCompletion
+import com.fuh.chattie.utils.extentions.observeInitial
 import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -24,7 +25,7 @@ class UsersDataStore(private val firebaseDatabase: FirebaseDatabase) {
                 .observeCompletion()
     }
 
-    fun getUser(id: String): Single<User> {
+    fun getUser(id: String): Single<UserRaw> {
         return firebaseDatabase
                 .reference
                 .child(DATABASE_USERS)
@@ -36,6 +37,6 @@ class UsersDataStore(private val firebaseDatabase: FirebaseDatabase) {
         return firebaseDatabase
                 .reference
                 .child(DATABASE_USERS)
-                .observeAll()
+                .observeAllValuesOnce()
     }
 }

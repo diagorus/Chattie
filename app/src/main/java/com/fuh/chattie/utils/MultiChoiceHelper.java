@@ -1,4 +1,4 @@
-package com.fuh.chattie.util;
+package com.fuh.chattie.utils;
 
 import android.content.Context;
 import android.os.Build;
