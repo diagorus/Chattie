@@ -10,6 +10,7 @@ import com.fuh.chattie.utils.mvp.BaseView
 object CreateChatRoomContract {
     interface Presenter : BasePresenter {
         fun loadUsers()
+        fun createChatRoom(members: List<User>)
     }
 
     interface View : BaseView<Presenter> {

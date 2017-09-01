@@ -28,33 +28,45 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".screens.splash.SplashActivity">
+        <activity
+            android:name=".screens.splash.SplashActivity"
+            android:screenOrientation="portrait">
+
             <intent-filter>
+
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".screens.login.LoginActivity">
+        <activity android:name=".screens.login.LoginActivity"
+            android:screenOrientation="portrait">
 
         </activity>
 
         <activity
             android:name=".screens.chat.ChatActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
 
         </activity>
 
-        <activity android:name=".screens.profile.ProfileActivity">
+        <activity
+            android:name=".screens.profile.ProfileActivity"
+            android:screenOrientation="portrait">
 
         </activity>
 
-        <activity android:name=".screens.chatrooms.ChatRoomsActivity">
+        <activity
+            android:name=".screens.chatrooms.ChatRoomsActivity"
+            android:screenOrientation="portrait">
 
         </activity>
 
-        <activity android:name=".screens.createchatroom.CreateChatRoomActivity">
+        <activity
+            android:name=".screens.createchatroom.CreateChatRoomActivity"
+            android:screenOrientation="portrait">
 
         </activity>
     </application>

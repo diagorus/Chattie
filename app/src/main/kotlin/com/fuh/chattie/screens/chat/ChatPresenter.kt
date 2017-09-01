@@ -23,7 +23,7 @@ class ChatPresenter(
         private val parameters: Parameters
 ) : ChatContract.Presenter {
 
-    private val userId = currentUserIdDataStore.getCurrentUserId()
+    private val currentUserId = currentUserIdDataStore.getCurrentUserId()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -32,7 +32,7 @@ class ChatPresenter(
     }
 
     override fun loadChat() {
-        val membersMapObs = chatRoomsDataStore.getAllMemberIds(userId, parameters.chatRoomId)
+        val membersMapObs = chatRoomsDataStore.getAllMemberIds(currentUserId, parameters.chatRoomId)
                 .flatMap { userId ->
                     usersDataStore.getUser(userId)
                             .map { user -> Pair(userId, user) }
@@ -55,7 +55,7 @@ class ChatPresenter(
                 .subscribe({
                     Timber.d(it.toString())
 
-                    view.showChatInitial(userId, it)
+                    view.showChatInitial(currentUserId, it)
                 }, {
                     Timber.e(it, "Error loading initial messages")
                 })
@@ -79,9 +79,15 @@ class ChatPresenter(
     }
 
     override fun pushMessage(messageText: String) {
-        val message = MessageRaw(userId, messageText, Date().time)
+        val message = MessageRaw(currentUserId, messageText, Date().time)
 
-        messagesDataStore.postMessage(parameters.chatRoomId, message)
+        val chatRoomDisposable = chatRoomsDataStore.getChatRoom(currentUserId, parameters.chatRoomId)
+                .subscribe({
+                    messagesDataStore.postMessage(parameters.chatRoomId, it, message)
+                }, {
+                    Timber.e(it)
+                })
+        compositeDisposable.add(chatRoomDisposable)
     }
 
     override fun stop() {

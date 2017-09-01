@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.fuh.chattie.R
 import com.fuh.chattie.model.User
+import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
 import com.fuh.chattie.utils.ui.BaseToolbarActivity
@@ -35,8 +36,10 @@ class CreateChatRoomActivity : BaseToolbarActivity(), CreateChatRoomContract.Vie
     }
 
     override fun showUsers(users: List<User>) {
-        val usersAdapter = UsersAdapter(users) {
-            toast(it.toString(), Toast.LENGTH_LONG)
+        val usersAdapter = UsersAdapter(users) { selectedIndices ->
+            val selectedUsers = users.slice(selectedIndices)
+
+            presenter.createChatRoom(selectedUsers)
         }
 
         val layoutManager = LinearLayoutManager(this)
@@ -51,9 +54,16 @@ class CreateChatRoomActivity : BaseToolbarActivity(), CreateChatRoomContract.Vie
         presenter = CreateChatRoomPresenter(
                 this,
                 CurrentUserIdDataStore(this),
-                UsersDataStore(FirebaseDatabase.getInstance())
+                UsersDataStore(FirebaseDatabase.getInstance()),
+                ChatRoomsDataStore(FirebaseDatabase.getInstance())
         )
         presenter.start()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        presenter.stop()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

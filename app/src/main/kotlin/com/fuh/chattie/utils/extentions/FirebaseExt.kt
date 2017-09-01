@@ -87,50 +87,47 @@ inline fun <reified T> DatabaseReference.observeAllValuesOnce(): Observable<T> {
 
 fun Query.observeAllKeysOnce(): Observable<String> {
     return Observable.create { emitter ->
-        this
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val dataSnapshots = dataSnapshot.children.iterator()
+        addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val dataSnapshots = dataSnapshot.children.iterator()
 
-                        while (dataSnapshots.hasNext()) {
-                            val dataSnapshotChild = dataSnapshots.next()
-                            val childKey = dataSnapshotChild.key
+                while (dataSnapshots.hasNext()) {
+                    val dataSnapshotChild = dataSnapshots.next()
+                    val childKey = dataSnapshotChild.key
 
-                            childKey?.let {
-                                emitter.onNext(childKey)
-                            } ?: emitter.onError(IllegalStateException("Key is null"))
-                        }
+                    childKey?.let {
+                        emitter.onNext(childKey)
+                    } ?: emitter.onError(IllegalStateException("Key is null"))
+                }
 
-                        emitter.onComplete()
-                    }
+                emitter.onComplete()
+            }
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        emitter.onError(databaseError.toException())
-                    }
-                })
+            override fun onCancelled(databaseError: DatabaseError) {
+                emitter.onError(databaseError.toException())
+            }
+        })
     }
 }
-//TODO: initial and for child addition different methods?
+
 inline fun <reified T> DatabaseReference.observeNewValues(): Observable<T> {
     return Observable.create<T> { emitter ->
-        this
-                .addChildEventListener(object : BaseChildEventListener {
+        addChildEventListener(object : BaseChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String) {
+                    val newChild = dataSnapshot.getValue(T::class.java)
 
-                    override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String) {
-                        val newChild = dataSnapshot.getValue(T::class.java)
-
-                        newChild?.let {
-                            emitter.onNext(newChild)
-                        } ?: apply {
-                            val exception = IllegalStateException("No data found, ${T::class.java.simpleName} is null")
-                            emitter.onError(exception)
-                        }
+                    newChild?.let {
+                        emitter.onNext(newChild)
+                    } ?: apply {
+                        val exception = IllegalStateException("No data found, ${T::class.java.simpleName} is null")
+                        emitter.onError(exception)
                     }
+                }
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        emitter.onError(databaseError.toException())
-                    }
-                })
+                override fun onCancelled(databaseError: DatabaseError) {
+                    emitter.onError(databaseError.toException())
+                }
+        })
     }
             .publish()
             .autoConnect()

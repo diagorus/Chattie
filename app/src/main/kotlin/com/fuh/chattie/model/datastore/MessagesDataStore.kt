@@ -1,5 +1,6 @@
 package com.fuh.chattie.model.datastore
 
+import com.fuh.chattie.model.ChatRoomRaw
 import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.MessageRaw
 import com.fuh.chattie.model.datastore.contracts.DATABASE_CHAT_ROOMS
@@ -16,8 +17,8 @@ import io.reactivex.Observable
  */
 class MessagesDataStore(private val firebaseDatabase: FirebaseDatabase) {
 
-    fun postMessage(chatRoomId: String, message: MessageRaw) {
-        val messageId = firebaseDatabase
+    fun postMessage(chatRoomId: String, chatRoom: ChatRoomRaw, message: MessageRaw) {
+        val newMessageId = firebaseDatabase
                 .reference
                 .child(DATABASE_MESSAGES)
                 .child(chatRoomId)
@@ -25,11 +26,12 @@ class MessagesDataStore(private val firebaseDatabase: FirebaseDatabase) {
                 .key
 
         val messageValues = message.toMap()
-
-        val childUpdates = mapOf(
-                "$DATABASE_MESSAGES/$chatRoomId/$messageId" to messageValues,
-                "$DATABASE_CHAT_ROOMS/${message.userId}/$chatRoomId/lastMessage" to messageValues
-        )
+        val childUpdates = chatRoom.members
+                ?.map { (userId, _ ) ->
+                    "$DATABASE_CHAT_ROOMS/$userId/$chatRoomId/lastMessage" to messageValues
+                }
+                ?.plus("$DATABASE_MESSAGES/$chatRoomId/$newMessageId" to messageValues)
+                ?.toMap()
 
         firebaseDatabase.reference.updateChildren(childUpdates)
     }

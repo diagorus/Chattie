@@ -3,7 +3,7 @@ package com.fuh.chattie.utils.extentions
 import android.content.Context
 import android.net.Uri
 import com.fuh.chattie.R
-import com.fuh.chattie.model.Message
+import com.fuh.chattie.model.ChatRoomRaw
 import com.fuh.chattie.model.MessageRaw
 import com.fuh.chattie.model.User
 import com.google.gson.Gson
@@ -25,6 +25,14 @@ fun MessageRaw?.toMap(): Map<String, Any?> {
     return mapOf(
             "userId" to this?.userId,
             "text" to this?.text,
-            "time" to this?.time
+            "timestamp" to this?.timestamp
+    )
+}
+
+fun ChatRoomRaw?.toMap(): Map<String, Any?> {
+    return mapOf(
+            "title" to this?.title,
+            "lastMessage" to this?.lastMessage,
+            "members" to this?.members
     )
 }

@@ -1,7 +1,11 @@
 package com.fuh.chattie.screens.createchatroom
 
+import com.fuh.chattie.model.ChatRoomRaw
+import com.fuh.chattie.model.User
+import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
+import com.fuh.chattie.utils.mvp.BasePresenter
 import com.fuh.chattie.utils.mvp.BaseRxPresenter
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
@@ -11,9 +15,12 @@ import timber.log.Timber
  */
 class CreateChatRoomPresenter(
         private val view: CreateChatRoomContract.View,
-        private val currentUserIdDataStore: CurrentUserIdDataStore,
-        private val usersDataStore: UsersDataStore
-) : BaseRxPresenter(), CreateChatRoomContract.Presenter {
+        currentUserIdDataStore: CurrentUserIdDataStore,
+        private val usersDataStore: UsersDataStore,
+        private val chatRoomsDataStore: ChatRoomsDataStore
+) : CreateChatRoomContract.Presenter {
+
+    private val currentUserId = currentUserIdDataStore.getCurrentUserId()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -22,9 +29,7 @@ class CreateChatRoomPresenter(
     }
 
     override fun loadUsers() {
-        val currentUserId = currentUserIdDataStore.getCurrentUserId()
-
-        val disposable = usersDataStore.getAllUsers()
+        val allUsersDisposable = usersDataStore.getAllUsers()
                 .filter {
                     it.id != currentUserId
                 }
@@ -33,8 +38,22 @@ class CreateChatRoomPresenter(
                         { view.showUsers(it) },
                         { Timber.e(it) }
                 )
+        compositeDisposable.add(allUsersDisposable)
+    }
 
-        compositeDisposable.add(disposable)
+    override fun createChatRoom(members: List<User>) {
+        usersDataStore.getUser(currentUserId)
+                .subscribe({
+
+                }, {
+
+                })
+        val titleRaw = members.map { it.name }.joinToString()
+        val membersRaw = members.map { it.id!! to true }.plus(currentUserId to true).toMap()
+
+        val newChatRoom = ChatRoomRaw(title = titleRaw, members = membersRaw)
+
+        chatRoomsDataStore.postChatRoom(newChatRoom)
     }
 
     override fun stop() {
