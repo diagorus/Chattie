@@ -112,25 +112,10 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.chat_menu, menu)
-        return true
-    }
+    override fun onStop() {
+        super.onStop()
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.chat_menu_profile -> {
-                val intent = ProfileActivity.newIntent(this)
-
-                startActivity(intent)
-            }
-        }
-        return true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        chatMessageAdapter.cleanup()
+        presenter.stop()
     }
 
     private fun clearInput() {

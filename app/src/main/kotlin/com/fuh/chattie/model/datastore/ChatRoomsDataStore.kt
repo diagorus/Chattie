@@ -1,6 +1,7 @@
 package com.fuh.chattie.model.datastore
 
 import com.fuh.chattie.model.ChatRoom
+import com.fuh.chattie.model.ChatRoomRaw
 import com.fuh.chattie.model.datastore.contracts.DATABASE_CHAT_ROOMS
 import com.fuh.chattie.model.datastore.contracts.DATABASE_CHAT_ROOMS_MEMBERS
 import com.fuh.chattie.utils.extentions.observeAllKeysOnce
@@ -25,34 +26,36 @@ class ChatRoomsDataStore(private val firebaseDatabase: FirebaseDatabase) {
                 .observeCompletion()
     }
 
-    fun getAllChatRooms(userId: String): Observable<ChatRoom> {
-        return Observable.create { emitter ->
-            firebaseDatabase
-                    .reference
-                    .child(DATABASE_CHAT_ROOMS)
-                    .child(userId)
-                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            val dataSnapshots = dataSnapshot.children.iterator()
-
-                            while (dataSnapshots.hasNext()) {
-                                val dataSnapshotChild = dataSnapshots.next()
-
-                                val chatRoom = dataSnapshotChild.getValue<ChatRoom>(ChatRoom::class.java)
-
-                                chatRoom?.let {
-                                    emitter.onNext(chatRoom)
-                                } ?: emitter.onError(IllegalStateException("No data found, chatRoom is null"))
-                            }
-                            emitter.onComplete()
-                        }
-
-                        override fun onCancelled(databaseError: DatabaseError) {
-                            emitter.onError(databaseError.toException())
-                        }
-                    })
-        }
-    }
+//    fun getAllChatRooms(userId: String): Observable<ChatRoomRaw> {
+//        return Observable.create { emitter ->
+//            firebaseDatabase
+//                    .reference
+//                    .child(DATABASE_CHAT_ROOMS)
+//                    .child(userId)
+//                    .addListenerForSingleValueEvent(object : ValueEventListener {
+//                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                            val dataSnapshots = dataSnapshot.children.iterator()
+//
+//                            while (dataSnapshots.hasNext()) {
+//                                val dataSnapshotChild = dataSnapshots.next()
+//
+//                                val chatRoom = dataSnapshotChild.getValue<ChatRoomRaw>(ChatRoomRaw::class.java)
+//
+//                                chatRoom?.let {
+//                                    emitter.onNext(chatRoom)
+//                                } ?: apply {
+//                                    emitter.onError(IllegalStateException("No data found, chatRoom is null"))
+//                                }
+//                            }
+//                            emitter.onComplete()
+//                        }
+//
+//                        override fun onCancelled(databaseError: DatabaseError) {
+//                            emitter.onError(databaseError.toException())
+//                        }
+//                    })
+//        }
+//    }
 
     fun getAllChatRoomsQuery(userId: String): Query {
         return firebaseDatabase

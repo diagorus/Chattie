@@ -13,3 +13,9 @@ data class UserRaw(
         var name: String? = null,
         var photoUrl: String? = null
 )
+
+data class ChatRoomRaw(
+        var title: String? = null,
+        var lastMessage: MessageRaw? = null,
+        var members: Map<String, Boolean>? = null
+)

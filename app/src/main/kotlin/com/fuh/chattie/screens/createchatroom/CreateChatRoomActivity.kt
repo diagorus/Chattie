@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
+import android.view.MenuItem
 import android.widget.Toast
 import com.fuh.chattie.R
 import com.fuh.chattie.model.User
@@ -54,4 +55,14 @@ class CreateChatRoomActivity : BaseToolbarActivity(), CreateChatRoomContract.Vie
         )
         presenter.start()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+            when(item.itemId) {
+                android.R.id.home -> {
+                    finish()
+
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
+            }
 }

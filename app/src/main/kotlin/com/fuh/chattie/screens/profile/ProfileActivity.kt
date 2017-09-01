@@ -45,6 +45,33 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
 
     override fun ActionBar.init() {
         title = "Profile"
+        setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun showUser(user: User) {
+        val userName = user.getNameOrDefault(this)
+        etProfileName.textValue = userName
+
+        val photoUri = user.getPhotoUriOrDefault(this)
+        ivProfilePhoto.loadImageByUri(photoUri)
+    }
+
+    override fun showUserUpdateStart() {
+        notificationManager.startIntermediate(
+                NOTIFICATION_PROFILE_UPDATE,
+                ProgressNotificationManager.Options("Uploading...", "Profile updating", R.mipmap.ic_launcher)
+        )
+    }
+
+    override fun showUserUpdateComplete() {
+        notificationManager.cancel(NOTIFICATION_PROFILE_UPDATE)
+    }
+
+    override fun showUserUpdateFail() {
+        notificationManager.fail(
+                NOTIFICATION_PROFILE_UPDATE,
+                ProgressNotificationManager.Options("Uploading failed", "Profile updating", R.mipmap.ic_launcher)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,16 +98,21 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.profile_menu_save -> {
-                val newUserName = etProfileName.textValue
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+            when(item.itemId) {
+                R.id.profile_menu_save -> {
+                    val newUserName = etProfileName.textValue
+                    presenter.updateUser(CurrentUserChangeableModel(newUserName, newPhotoUri))
 
-                presenter.updateUser(CurrentUserChangeableModel(newUserName, newPhotoUri))
+                    true
+                }
+                android.R.id.home -> {
+                    finish()
+
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
             }
-        }
-        return true
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -108,32 +140,6 @@ class ProfileActivity : BaseToolbarActivity(), ProfileContract.View {
                 REQUEST_PERMISSION_STORAGE -> startGallery()
             }
         }
-    }
-
-    override fun showUser(user: User) {
-        val userName = user.getNameOrDefault(this)
-        etProfileName.textValue = userName
-
-        val photoUri = user.getPhotoUriOrDefault(this)
-        ivProfilePhoto.loadImageByUri(photoUri)
-    }
-
-    override fun showUserUpdateStart() {
-        notificationManager.startIntermediate(
-                NOTIFICATION_PROFILE_UPDATE,
-                ProgressNotificationManager.Options("Uploading...", "Profile updating", R.mipmap.ic_launcher)
-        )
-    }
-
-    override fun showUserUpdateComplete() {
-        notificationManager.cancel(NOTIFICATION_PROFILE_UPDATE)
-    }
-
-    override fun showUserUpdateFail() {
-        notificationManager.fail(
-                NOTIFICATION_PROFILE_UPDATE,
-                ProgressNotificationManager.Options("Uploading failed", "Profile updating", R.mipmap.ic_launcher)
-        )
     }
 
     private fun signOut() {
