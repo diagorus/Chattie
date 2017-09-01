@@ -1,4 +1,4 @@
-package com.fuh.chattie.utils
+package com.fuh.chattie.utils.ui
 
 import android.os.Bundle
 import android.support.annotation.LayoutRes

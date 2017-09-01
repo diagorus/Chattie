@@ -2,7 +2,7 @@ package com.fuh.chattie.screens.chatrooms
 
 import android.view.View
 import com.fuh.chattie.model.ChatRoom
-import com.fuh.chattie.utils.BaseViewHolder
+import com.fuh.chattie.utils.ui.BaseViewHolder
 import kotlinx.android.synthetic.main.chatroom_item.view.*
 
 /**

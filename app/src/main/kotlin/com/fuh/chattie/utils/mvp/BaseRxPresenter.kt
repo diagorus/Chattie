@@ -1,4 +1,4 @@
-package com.fuh.chattie.utils
+package com.fuh.chattie.utils.mvp
 
 import io.reactivex.disposables.CompositeDisposable
 

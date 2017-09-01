@@ -1,23 +1,28 @@
 package com.fuh.chattie.screens.chat
 
+import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.fuh.chattie.model.Message
-import com.fuh.chattie.model.User
-import com.google.firebase.database.Query
+import com.fuh.chattie.model.MessagePres
 
 /**
- * Created by lll on 15.08.2017.
+ * Created by lll on 31.08.2017.
  */
 class ChatAdapter(
         private val currentUserId: String,
-        query: Query
-) : FirebaseRecyclerAdapter<Message, BaseChatViewHolder>(
-        Message::class.java,
-        0,
-        BaseChatViewHolder::class.java,
-        query
-) {
+        initialMessages: List<MessagePres> = listOf()
+): RecyclerView.Adapter<BaseChatViewHolder>() {
+
+    private val items: MutableList<MessagePres> = initialMessages.toMutableList()
+
+    fun addMessage(message: MessagePres) {
+        items.add(message)
+        notifyItemInserted(items.lastIndex)
+    }
+
+    fun addAllMessages(messages: List<MessagePres>) {
+        items.addAll(messages)
+        notifyItemRangeInserted(items.lastIndex, messages.size)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseChatViewHolder {
         val type = ChatMessageViewHolderType.getByLayoutId(viewType)!!
@@ -25,18 +30,22 @@ class ChatAdapter(
         return type.createViewHolder(parent)
     }
 
+    override fun onBindViewHolder(holder: BaseChatViewHolder, position: Int) {
+        val data = items[position]
+
+        holder.bind(data)
+    }
+
+    override fun getItemCount(): Int = items.size
+
     override fun getItemViewType(position: Int): Int {
-        val item = getItem(position)
+        val item = items[position]
 
         return decideViewType(item)
     }
 
-    override fun populateViewHolder(viewHolder: BaseChatViewHolder, model: Message, position: Int) {
-        viewHolder.bind(model)
-    }
-
-    private fun decideViewType(item: Message): Int {
-        return if(currentUserId == item.userId) {
+    private fun decideViewType(item: MessagePres): Int {
+        return if(currentUserId == item.user?.id) {
             ChatMessageViewHolderType.OUTGOING.layoutId
         } else {
             ChatMessageViewHolderType.INCOMING.layoutId

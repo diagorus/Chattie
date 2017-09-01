@@ -15,7 +15,7 @@ import com.fuh.chattie.model.CurrentUserChangeableModel
 import com.fuh.chattie.model.User
 import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
 import com.fuh.chattie.model.datastore.ImageDataStore
-import com.fuh.chattie.utils.BaseToolbarActivity
+import com.fuh.chattie.utils.ui.BaseToolbarActivity
 import com.fuh.chattie.utils.ProgressNotificationManager
 import com.fuh.chattie.utils.extentions.*
 import com.google.firebase.auth.FirebaseAuth

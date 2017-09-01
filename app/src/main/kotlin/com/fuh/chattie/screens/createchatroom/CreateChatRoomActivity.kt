@@ -10,7 +10,7 @@ import com.fuh.chattie.R
 import com.fuh.chattie.model.User
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
-import com.fuh.chattie.utils.BaseToolbarActivity
+import com.fuh.chattie.utils.ui.BaseToolbarActivity
 import com.fuh.chattie.utils.extentions.toast
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.createchatroom_activity.*

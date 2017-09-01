@@ -2,8 +2,8 @@ package com.fuh.chattie.screens.profile
 
 import com.fuh.chattie.model.CurrentUserChangeableModel
 import com.fuh.chattie.model.User
-import com.fuh.chattie.utils.BasePresenter
-import com.fuh.chattie.utils.BaseView
+import com.fuh.chattie.utils.mvp.BasePresenter
+import com.fuh.chattie.utils.mvp.BaseView
 
 /**
  * Created by lll on 17.08.2017.

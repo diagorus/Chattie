@@ -6,6 +6,7 @@ import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.MessagesDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import timber.log.Timber
 import java.util.*
@@ -24,7 +25,7 @@ class ChatPresenter(
 
     private val userId = currentUserIdDataStore.getCurrentUserId()
 
-    private lateinit var membersMapObs: Observable<Map<String, UserRaw>>
+    private val compositeDisposable = CompositeDisposable()
 
     override fun start() {
         loadChat()
@@ -39,10 +40,9 @@ class ChatPresenter(
                 }
                 .toMap({ (userId, _) -> userId }, { (_, user) -> user })
                 .toObservable()
-
         val rawMessagesObs = messagesDataStore.getAllMessagesContinuously(parameters.chatRoomId)
 
-        Observable.combineLatest(
+        val initialMessagesDisposable = Observable.combineLatest(
                 rawMessagesObs.delay { membersMapObs },
                 membersMapObs,
                 BiFunction { (userId, text, time): MessageRaw, membersMap: Map<String, UserRaw> ->
@@ -59,8 +59,9 @@ class ChatPresenter(
                 }, {
                     Timber.e(it, "Error loading initial messages")
                 })
+        compositeDisposable.add(initialMessagesDisposable)
 
-        messagesDataStore.listenForNewMessages(parameters.chatRoomId)
+        val newMessagesDisposable = messagesDataStore.listenForNewMessages(parameters.chatRoomId)
                 .withLatestFrom(
                         membersMapObs,
                         BiFunction { (userId, text, time): MessageRaw, membersMap: Map<String, UserRaw> ->
@@ -74,15 +75,17 @@ class ChatPresenter(
                 }, {
                     Timber.e(it)
                 })
-
-//        val query = messagesDataStore.getAllMessagesQuery(parameters.chatRoomId)
-//        view.showChat(userId, query)
+        compositeDisposable.add(newMessagesDisposable)
     }
 
     override fun pushMessage(messageText: String) {
         val message = MessageRaw(userId, messageText, Date().time)
 
         messagesDataStore.postMessage(parameters.chatRoomId, message)
+    }
+
+    override fun stop() {
+        compositeDisposable.dispose()
     }
 
     data class Parameters(val chatRoomId: String)

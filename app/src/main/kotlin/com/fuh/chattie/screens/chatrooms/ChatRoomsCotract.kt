@@ -1,7 +1,7 @@
 package com.fuh.chattie.screens.chatrooms
 
-import com.fuh.chattie.utils.BasePresenter
-import com.fuh.chattie.utils.BaseView
+import com.fuh.chattie.utils.mvp.BasePresenter
+import com.fuh.chattie.utils.mvp.BaseView
 import com.google.firebase.database.Query
 
 /**

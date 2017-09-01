@@ -1,4 +1,4 @@
-package com.fuh.chattie.utils
+package com.fuh.chattie.utils.ui
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

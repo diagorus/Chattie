@@ -15,10 +15,9 @@ import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.MessagesDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
 import com.fuh.chattie.screens.profile.ProfileActivity
-import com.fuh.chattie.utils.BaseToolbarActivity
+import com.fuh.chattie.utils.ui.BaseToolbarActivity
 import com.fuh.chattie.utils.extentions.textValue
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.Query
 import com.jakewharton.rxbinding2.support.v7.widget.scrollEvents
 import kotlinx.android.synthetic.main.chat_activity.*
 import timber.log.Timber
@@ -42,7 +41,6 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
     override lateinit var presenter: ChatContract.Presenter
 
     private lateinit var chatMessageAdapter: ChatAdapter
-    private lateinit var rxChatMessageAdapter: RxChatAdapter
 
     override fun getLayoutId(): Int = R.layout.chat_activity
 
@@ -50,8 +48,8 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
         title = "Chat"
     }
 
-    override fun showChat(currentUserId: String, query: Query) {
-        chatMessageAdapter = ChatAdapter(currentUserId, query)
+    override fun showChatInitial(currentUserId: String, messages: List<MessagePres>) {
+        chatMessageAdapter = ChatAdapter(currentUserId, messages)
 
         val layoutManager = LinearLayoutManager(this)
                 .apply { stackFromEnd = true }
@@ -75,49 +73,6 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
         rvChatMessages.adapter = chatMessageAdapter
         rvChatMessages.scrollEvents()
                 .map { with(layoutManager) { findLastVisibleItemPosition() == itemCount - 1 } }
-                .subscribe(
-                        {
-                            with(fabChatScrollToEnd) {
-                                if (it) {
-                                    hide()
-                                } else {
-                                    show()
-                                }
-                            }
-                        },
-                        { Timber.e(it) }
-                )
-
-        fabChatScrollToEnd.setOnClickListener {
-            rvChatMessages.smoothScrollToPosition(chatMessageAdapter.itemCount - 1)
-        }
-    }
-
-    override fun showChatInitial(currentUserId: String, messages: List<MessagePres>) {
-        rxChatMessageAdapter = RxChatAdapter(currentUserId, messages)
-
-        val layoutManager = LinearLayoutManager(this)
-                .apply { stackFromEnd = true }
-
-        rxChatMessageAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
-
-                val friendlyMessageCount = rxChatMessageAdapter.itemCount
-                val lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition()
-                // If the recycler view is initially being loaded or the
-                // user is at the bottom of the list, scroll to the bottom
-                // of the list to show the newly added message.
-                if (lastVisiblePosition == -1 || positionStart >= friendlyMessageCount - 1 && lastVisiblePosition == positionStart - 1) {
-                    rvChatMessages.scrollToPosition(positionStart)
-                }
-            }
-        })
-
-        rvChatMessages.layoutManager = layoutManager
-        rvChatMessages.adapter = rxChatMessageAdapter
-        rvChatMessages.scrollEvents()
-                .map { with(layoutManager) { findLastVisibleItemPosition() == itemCount - 1 } }
                 .subscribe({
                     with(fabChatScrollToEnd) { if (it) { hide() } else { show() } }
                 }, {
@@ -125,12 +80,12 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
                 })
 
         fabChatScrollToEnd.setOnClickListener {
-            rvChatMessages.smoothScrollToPosition(rxChatMessageAdapter.itemCount - 1)
+            rvChatMessages.smoothScrollToPosition(chatMessageAdapter.itemCount - 1)
         }
     }
 
     override fun showChatNewMessage(message: MessagePres) {
-        rxChatMessageAdapter.addMessage(message)
+        chatMessageAdapter.addMessage(message)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

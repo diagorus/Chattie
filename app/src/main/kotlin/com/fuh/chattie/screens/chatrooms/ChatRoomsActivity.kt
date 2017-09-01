@@ -14,7 +14,7 @@ import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.screens.chat.ChatActivity
 import com.fuh.chattie.screens.createchatroom.CreateChatRoomActivity
-import com.fuh.chattie.utils.BaseToolbarActivity
+import com.fuh.chattie.utils.ui.BaseToolbarActivity
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import kotlinx.android.synthetic.main.chatrooms_activity.*

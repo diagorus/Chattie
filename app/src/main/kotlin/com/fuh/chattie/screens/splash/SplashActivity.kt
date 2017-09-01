@@ -10,7 +10,7 @@ import com.fuh.chattie.model.datastore.CurrentUserAuthDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
 import com.fuh.chattie.screens.chatrooms.ChatRoomsActivity
-import com.fuh.chattie.utils.BaseActivity
+import com.fuh.chattie.utils.ui.BaseActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import timber.log.Timber

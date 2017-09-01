@@ -1,4 +1,4 @@
-package com.fuh.chattie.utils
+package com.fuh.chattie.utils.mvp
 
 /**
  * Created by lll on 10.08.2017.

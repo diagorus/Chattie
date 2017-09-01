@@ -1,8 +1,8 @@
 package com.fuh.chattie.screens.splash
 
 import com.fuh.chattie.model.User
-import com.fuh.chattie.utils.BasePresenter
-import com.fuh.chattie.utils.BaseView
+import com.fuh.chattie.utils.mvp.BasePresenter
+import com.fuh.chattie.utils.mvp.BaseView
 
 /**
  * Created by lll on 18.08.2017.

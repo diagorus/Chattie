@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.fuh.chattie.R
 import com.fuh.chattie.model.User
-import com.fuh.chattie.utils.SelectableAdapter
+import com.fuh.chattie.utils.ui.SelectableAdapter
 import com.fuh.chattie.utils.extentions.loadImageByUri
 import kotlinx.android.synthetic.main.user_item.view.*
 
