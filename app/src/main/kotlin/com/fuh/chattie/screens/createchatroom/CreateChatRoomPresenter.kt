@@ -42,18 +42,17 @@ class CreateChatRoomPresenter(
     }
 
     override fun createChatRoom(members: List<User>) {
-        usersDataStore.getUser(currentUserId)
-                .subscribe({
+        val currentUserDisposable = usersDataStore.getUser(currentUserId)
+                .subscribe({ (name, _) ->
+                    val titleRaw = "$name - ${members.map { it.name }.joinToString()}"
+                    val membersRaw = members.map { it.id!! to true }.plus(currentUserId to true).toMap()
 
+                    val newChatRoom = ChatRoomRaw(title = titleRaw, members = membersRaw)
+                    chatRoomsDataStore.postChatRoom(newChatRoom)
                 }, {
-
+                    Timber.e(it)
                 })
-        val titleRaw = members.map { it.name }.joinToString()
-        val membersRaw = members.map { it.id!! to true }.plus(currentUserId to true).toMap()
-
-        val newChatRoom = ChatRoomRaw(title = titleRaw, members = membersRaw)
-
-        chatRoomsDataStore.postChatRoom(newChatRoom)
+        compositeDisposable.add(currentUserDisposable)
     }
 
     override fun stop() {

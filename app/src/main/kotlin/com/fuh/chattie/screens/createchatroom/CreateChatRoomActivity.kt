@@ -40,6 +40,7 @@ class CreateChatRoomActivity : BaseToolbarActivity(), CreateChatRoomContract.Vie
             val selectedUsers = users.slice(selectedIndices)
 
             presenter.createChatRoom(selectedUsers)
+            finish()
         }
 
         val layoutManager = LinearLayoutManager(this)

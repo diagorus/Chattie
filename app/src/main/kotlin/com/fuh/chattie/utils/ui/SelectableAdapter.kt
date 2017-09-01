@@ -57,6 +57,7 @@ abstract class SelectableAdapter<VH : RecyclerView.ViewHolder>(
                 when(menuItem.itemId) {
                     R.id.itemChooseActionMenuConfirm -> {
                         val selectedPositions = selected.keys.toList()
+
                         onSelectionSuccess(selectedPositions)
                     }
                 }
@@ -86,6 +87,8 @@ abstract class SelectableAdapter<VH : RecyclerView.ViewHolder>(
         } else {
             selected.put(listPosition, itemView)
         }
+
+        actionMode?.title = "${selected.size} selected"
 
         if (selected.isEmpty()) {
             finishSelection()
