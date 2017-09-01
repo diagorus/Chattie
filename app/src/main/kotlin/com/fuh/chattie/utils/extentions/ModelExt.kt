@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.fuh.chattie.R
 import com.fuh.chattie.model.Message
+import com.fuh.chattie.model.MessageRaw
 import com.fuh.chattie.model.User
 import com.google.gson.Gson
 
@@ -20,7 +21,7 @@ fun User?.getNameOrDefault(ctx: Context): String =
 fun User?.getPhotoUriOrDefault(ctx: Context): Uri =
         Uri.parse(this?.photoUrl) ?: ctx.resourceToUri(R.drawable.no_avatar)
 
-fun Message?.toMap(): Map<String, Any?> {
+fun MessageRaw?.toMap(): Map<String, Any?> {
     return mapOf(
             "userId" to this?.userId,
             "text" to this?.text,

@@ -1,6 +1,7 @@
 package com.fuh.chattie.utils.extentions
 
 import android.net.Uri
+import com.fuh.chattie.utils.BaseChildEventListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import com.google.firebase.storage.UploadTask
@@ -109,25 +110,21 @@ fun Query.observeAllKeysOnce(): Observable<String> {
                 })
     }
 }
-//TODO: initial and for child addition different methodsgit ?
-inline fun <reified T> DatabaseReference.observeAllValuesContinuously(): Observable<T> {
-    return Observable.create { emitter ->
+//TODO: initial and for child addition different methods?
+inline fun <reified T> DatabaseReference.observeNewValues(): Observable<T> {
+    return Observable.create<T> { emitter ->
         this
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                        val dataSnapshots = dataSnapshot.children.iterator()
-//
-//                        while (dataSnapshots.hasNext()) {
-//                            val dataSnapshotChild = dataSnapshots.next()
-//
-//                            val child = dataSnapshotChild.getValue(T::class.java)
-//
-//                            child?.let {
-//                                emitter.onNext(child)
-//                            } ?: emitter.onError(IllegalStateException("No data found, ${T::class.java.simpleName} is null"))
-//                        }
-//
-//                        emitter.onComplete()
+                .addChildEventListener(object : BaseChildEventListener {
+
+                    override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String) {
+                        val newChild = dataSnapshot.getValue(T::class.java)
+
+                        newChild?.let {
+                            emitter.onNext(newChild)
+                        } ?: apply {
+                            val exception = IllegalStateException("No data found, ${T::class.java.simpleName} is null")
+                            emitter.onError(exception)
+                        }
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -135,6 +132,8 @@ inline fun <reified T> DatabaseReference.observeAllValuesContinuously(): Observa
                     }
                 })
     }
+            .publish()
+            .autoConnect()
 }
 
 data class Progress(val percents: Int)

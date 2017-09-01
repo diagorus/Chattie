@@ -24,6 +24,8 @@ class ChatPresenter(
 
     private val userId = currentUserIdDataStore.getCurrentUserId()
 
+    private lateinit var membersMapObs: Observable<Map<String, UserRaw>>
+
     override fun start() {
         loadChat()
     }
@@ -40,7 +42,7 @@ class ChatPresenter(
 
         val rawMessagesObs = messagesDataStore.getAllMessagesContinuously(parameters.chatRoomId)
 
-        val messagesObs = Observable.combineLatest(
+        Observable.combineLatest(
                 rawMessagesObs.delay { membersMapObs },
                 membersMapObs,
                 BiFunction { (userId, text, time): MessageRaw, membersMap: Map<String, UserRaw> ->
@@ -49,13 +51,7 @@ class ChatPresenter(
                     MessagePres(User(userId, user?.name, user?.photoUrl), text, time)
                 }
         )
-                .publish()
-                .autoConnect()
-
-        val initialMessagesObs = messagesObs
                 .toList()
-
-        initialMessagesObs
                 .subscribe({
                     Timber.d(it.toString())
 
@@ -64,14 +60,19 @@ class ChatPresenter(
                     Timber.e(it, "Error loading initial messages")
                 })
 
-        messagesObs
-                .skipUntil(initialMessagesObs.toObservable())
-                .subscribe({
-                    Timber.d(it.toString())
+        messagesDataStore.listenForNewMessages(parameters.chatRoomId)
+                .withLatestFrom(
+                        membersMapObs,
+                        BiFunction { (userId, text, time): MessageRaw, membersMap: Map<String, UserRaw> ->
+                            val user = membersMap[userId]
 
+                            MessagePres(User(userId, user?.name, user?.photoUrl), text, time)
+                        }
+                )
+                .subscribe({
                     view.showChatNewMessage(it)
                 }, {
-                    Timber.e(it, "Error loading new message")
+                    Timber.e(it)
                 })
 
 //        val query = messagesDataStore.getAllMessagesQuery(parameters.chatRoomId)
@@ -79,7 +80,7 @@ class ChatPresenter(
     }
 
     override fun pushMessage(messageText: String) {
-        val message = Message(userId, messageText, Date().time)
+        val message = MessageRaw(userId, messageText, Date().time)
 
         messagesDataStore.postMessage(parameters.chatRoomId, message)
     }

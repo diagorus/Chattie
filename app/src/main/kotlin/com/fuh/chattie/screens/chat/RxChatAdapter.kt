@@ -16,12 +16,12 @@ class RxChatAdapter(
 
     fun addMessage(message: MessagePres) {
         items.add(message)
-        notifyDataSetChanged()
+        notifyItemInserted(items.lastIndex)
     }
 
     fun addAllMessages(messages: List<MessagePres>) {
         items.addAll(messages)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(items.lastIndex, messages.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseChatViewHolderPres {
