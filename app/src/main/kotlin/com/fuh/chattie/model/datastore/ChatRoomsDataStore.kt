@@ -4,10 +4,7 @@ import com.fuh.chattie.model.ChatRoom
 import com.fuh.chattie.model.ChatRoomRaw
 import com.fuh.chattie.model.datastore.contracts.DATABASE_CHAT_ROOMS
 import com.fuh.chattie.model.datastore.contracts.DATABASE_CHAT_ROOMS_MEMBERS
-import com.fuh.chattie.utils.extentions.observeAllKeysOnce
-import com.fuh.chattie.utils.extentions.observeCompletion
-import com.fuh.chattie.utils.extentions.observeInitial
-import com.fuh.chattie.utils.extentions.toMap
+import com.fuh.chattie.utils.extentions.*
 import io.reactivex.Completable
 import com.google.firebase.database.*
 import io.reactivex.Observable
@@ -42,7 +39,7 @@ class ChatRoomsDataStore(private val firebaseDatabase: FirebaseDatabase) {
                 .observeCompletion()
     }
 
-    fun getChatRoom(userId: String, chatRoomId: String): Single<ChatRoomRaw> {
+    fun getChatRoom(userId: String, chatRoomId: String): Single<IndexedValue<ChatRoomRaw>> {
        return firebaseDatabase
                 .reference
                 .child(DATABASE_CHAT_ROOMS)
@@ -56,6 +53,14 @@ class ChatRoomsDataStore(private val firebaseDatabase: FirebaseDatabase) {
                 .reference
                 .child(DATABASE_CHAT_ROOMS)
                 .child(userId)
+    }
+
+    fun getAllChatRooms(userId: String): Observable<IndexedValue<ChatRoomRaw>> {
+        return firebaseDatabase
+                .reference
+                .child(DATABASE_CHAT_ROOMS)
+                .child(userId)
+                .observeAllValuesOnce()
     }
 
     fun getAllMemberIds(userId: String, chatRoomId: String): Observable<String> {

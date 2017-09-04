@@ -23,13 +23,13 @@ import kotlinx.android.synthetic.main.chatrooms_activity.*
 /**
  * Created by lll on 23.08.2017.
  */
-class ChatRoomsActivity : BaseToolbarActivity(), ChatRoomsCotract.View {
+class ChatRoomsActivity : BaseToolbarActivity(), ChatRoomsContract.View {
 
     companion object {
         fun newIntent(ctx: Context): Intent = Intent(ctx, ChatRoomsActivity::class.java)
     }
 
-    override lateinit var presenter: ChatRoomsCotract.Presenter
+    override lateinit var presenter: ChatRoomsContract.Presenter
     private lateinit var chatRoomsAdapter: FirebaseRecyclerAdapter<ChatRoom, ChatRoomViewHolder>
 
     override fun getLayoutId(): Int = R.layout.chatrooms_activity

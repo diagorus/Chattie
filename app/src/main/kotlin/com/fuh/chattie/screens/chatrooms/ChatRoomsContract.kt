@@ -7,7 +7,7 @@ import com.google.firebase.database.Query
 /**
  * Created by lll on 23.08.2017.
  */
-object ChatRoomsCotract {
+object ChatRoomsContract {
     interface Presenter : BasePresenter {
         fun loadChatRooms()
     }

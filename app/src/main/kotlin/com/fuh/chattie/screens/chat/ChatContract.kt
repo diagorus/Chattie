@@ -1,6 +1,6 @@
 package com.fuh.chattie.screens.chat
 
-import com.fuh.chattie.model.MessagePres
+import com.fuh.chattie.model.Message
 import com.fuh.chattie.utils.mvp.BasePresenter
 import com.fuh.chattie.utils.mvp.BaseView
 
@@ -9,8 +9,8 @@ import com.fuh.chattie.utils.mvp.BaseView
  */
 object ChatContract {
     interface View : BaseView<Presenter> {
-        fun showChatInitial(currentUserId: String, messages: List<MessagePres>)
-        fun showChatNewMessage(message: MessagePres)
+        fun showChatInitial(currentUserId: String, messages: List<Message>)
+        fun showChatNewMessage(message: Message)
     }
 
     interface Presenter : BasePresenter {

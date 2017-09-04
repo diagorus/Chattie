@@ -5,6 +5,7 @@ import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.MessagesDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
+import com.fuh.chattie.utils.extentions.IndexedValue
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
@@ -32,23 +33,21 @@ class ChatPresenter(
     }
 
     override fun loadChat() {
-        val membersMapObs = chatRoomsDataStore.getAllMemberIds(currentUserId, parameters.chatRoomId)
-                .flatMap { userId ->
-                    usersDataStore.getUser(userId)
-                            .map { user -> Pair(userId, user) }
-                            .toObservable()
-                }
-                .toMap({ (userId, _) -> userId }, { (_, user) -> user })
+        val membersMapObs = chatRoomsDataStore.getChatRoom(currentUserId, parameters.chatRoomId)
+                .map { it.value }
+                .flatMapObservable { Observable.fromIterable(it.members?.keys) }
+                .flatMap { usersDataStore.getUser(it).toObservable() }
+                .toMap({ (id, _) -> id!! }, { (_, userRaw) -> userRaw!! })
                 .toObservable()
-        val rawMessagesObs = messagesDataStore.getAllMessagesContinuously(parameters.chatRoomId)
+        val rawMessagesObs = messagesDataStore.getAllMessages(parameters.chatRoomId)
 
         val initialMessagesDisposable = Observable.combineLatest(
                 rawMessagesObs.delay { membersMapObs },
                 membersMapObs,
-                BiFunction { (userId, text, time): MessageRaw, membersMap: Map<String, UserRaw> ->
-                    val user = membersMap[userId]
+                BiFunction { (id, messageRaw): IndexedValue<MessageRaw>, membersMap: Map<String, UserRaw> ->
+                    val user = membersMap[messageRaw?.userId]
 
-                    MessagePres(User(userId, user?.name, user?.photoUrl), text, time)
+                    Message(id, User(messageRaw?.userId, user?.name, user?.photoUrl), messageRaw?.text, messageRaw?.timestamp)
                 }
         )
                 .toList()
@@ -64,10 +63,10 @@ class ChatPresenter(
         val newMessagesDisposable = messagesDataStore.listenForNewMessages(parameters.chatRoomId)
                 .withLatestFrom(
                         membersMapObs,
-                        BiFunction { (userId, text, time): MessageRaw, membersMap: Map<String, UserRaw> ->
-                            val user = membersMap[userId]
+                        BiFunction { (id, messageRaw): IndexedValue<MessageRaw>, membersMap: Map<String, UserRaw> ->
+                            val userRaw = membersMap[messageRaw?.userId]
 
-                            MessagePres(User(userId, user?.name, user?.photoUrl), text, time)
+                            Message(id, User(messageRaw?.userId, userRaw?.name, userRaw?.photoUrl), messageRaw?.text, messageRaw?.timestamp)
                         }
                 )
                 .subscribe({
@@ -83,7 +82,7 @@ class ChatPresenter(
 
         val chatRoomDisposable = chatRoomsDataStore.getChatRoom(currentUserId, parameters.chatRoomId)
                 .subscribe({
-                    messagesDataStore.postMessage(parameters.chatRoomId, it, message)
+                    messagesDataStore.postMessage(parameters.chatRoomId, it.value!!, message)
                 }, {
                     Timber.e(it)
                 })

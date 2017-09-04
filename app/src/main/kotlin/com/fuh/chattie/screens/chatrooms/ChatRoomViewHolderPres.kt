@@ -7,9 +7,9 @@ import com.fuh.chattie.utils.ui.BaseViewHolder
 import kotlinx.android.synthetic.main.chatroom_item.view.*
 
 /**
- * Created by lll on 23.08.2017.
+ * Created by lll on 04.09.2017.
  */
-class ChatRoomViewHolder(itemView: View) : BaseViewHolder<ChatRoom>(itemView) {
+class ChatRoomViewHolderPres(itemView: View) : BaseViewHolder<ChatRoom>(itemView) {
 
     override fun bind(data: ChatRoom, onClick: (ChatRoom) -> Unit) {
         with(itemView) {

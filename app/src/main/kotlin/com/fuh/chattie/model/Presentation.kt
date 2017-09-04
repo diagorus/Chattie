@@ -4,9 +4,10 @@ package com.fuh.chattie.model
  * Created by lll on 23.08.2017.
  */
 data class Message(
-        var userId: String? = null,
+        var id: String? = null,
+        var user: User? = null,
         var text: String? = null,
-        var time: Long = 0
+        var timestamp: Long? = 0
 )
 
 data class User(
@@ -16,13 +17,8 @@ data class User(
 )
 
 data class ChatRoom(
+        var id: String? = null,
         var title: String? = null,
         var lastMessage: Message? = null,
         var members: Map<String, Boolean>? = null
-)
-
-data class MessagePres(
-        var user: User? = null,
-        var text: String? = null,
-        var time: Long = 0
 )

@@ -7,10 +7,10 @@ import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
  * Created by lll on 23.08.2017.
  */
 class ChatRoomsPresenter(
-        private val view: ChatRoomsCotract.View,
+        private val view: ChatRoomsContract.View,
         private val currentUserIdDataStore: CurrentUserIdDataStore,
         private val chatRoomsDataStore: ChatRoomsDataStore
-) : ChatRoomsCotract.Presenter {
+) : ChatRoomsContract.Presenter {
 
     override fun start() {
         loadChatRooms()

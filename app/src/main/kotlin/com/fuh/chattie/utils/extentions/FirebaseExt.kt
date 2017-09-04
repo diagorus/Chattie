@@ -14,51 +14,50 @@ import io.reactivex.Single
  */
 fun UploadTask.observeProgress(): Observable<Progress> {
     return Observable.create { emitter ->
-        this
-                .addOnProgressListener {
-                    val progressPercents = ((100.0 * it.bytesTransferred) / it.totalByteCount).toInt()
-                    emitter.onNext(Progress(progressPercents))
-                }
-                .addOnFailureListener { emitter.onError(it) }
-                .addOnSuccessListener { emitter.onComplete() }
+        addOnProgressListener {
+            val progressPercents = ((100.0 * it.bytesTransferred) / it.totalByteCount).toInt()
+            emitter.onNext(Progress(progressPercents))
+        }
+        addOnFailureListener { emitter.onError(it) }
+        addOnSuccessListener { emitter.onComplete() }
     }
 }
 
 fun UploadTask.observeCompletion(): Single<Uri> {
     return Single.create { emitter ->
-        this
-                .addOnFailureListener { emitter.onError(it) }
-                .addOnSuccessListener { emitter.onSuccess(it.downloadUrl!!) }
+        addOnFailureListener { emitter.onError(it) }
+        addOnSuccessListener { emitter.onSuccess(it.downloadUrl!!) }
     }
 }
 
 fun <TResult> Task<TResult>.observeCompletion(): Completable {
     return Completable.create { emitter ->
-        this
-                .addOnFailureListener { emitter.onError(it) }
-                .addOnSuccessListener { emitter.onComplete() }
+        addOnFailureListener { emitter.onError(it) }
+        addOnSuccessListener { emitter.onComplete() }
     }
 }
 
-inline fun <reified T> DatabaseReference.observeInitial(): Single<T> {
+inline fun <reified T> Query.observeInitial(): Single<IndexedValue<T>> {
     return Single.create { emitter ->
-        this
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val data = dataSnapshot.getValue(T::class.java)
-                        data?.let {
-                            emitter.onSuccess(data)
-                        } ?: emitter.onError(IllegalStateException("No data found"))
-                    }
+        addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val data = dataSnapshot.getValue(T::class.java)
+                val dataKey = dataSnapshot.key
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        emitter.onError(databaseError.toException())
-                    }
-                })
+                val indexedData = IndexedValue(dataKey, data)
+                data?.let {
+                    emitter.onSuccess(indexedData)
+                } ?: emitter.onError(IllegalStateException("No data found"))
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                emitter.onError(databaseError.toException())
+            }
+        })
     }
 }
 
-inline fun <reified T> DatabaseReference.observeAllValuesOnce(): Observable<T> {
+inline fun <reified T> Query.observeAllValuesOnce(): Observable<IndexedValue<T>> {
     return Observable.create { emitter ->
         this
                 .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -69,9 +68,11 @@ inline fun <reified T> DatabaseReference.observeAllValuesOnce(): Observable<T> {
                             val dataSnapshotChild = dataSnapshots.next()
 
                             val child = dataSnapshotChild.getValue(T::class.java)
+                            val childKey = dataSnapshotChild.key
 
+                            val indexedChild = IndexedValue(childKey, child)
                             child?.let {
-                                emitter.onNext(child)
+                                emitter.onNext(indexedChild)
                             } ?: emitter.onError(IllegalStateException("No data found, ${T::class.java.simpleName} is null"))
                         }
 
@@ -110,19 +111,21 @@ fun Query.observeAllKeysOnce(): Observable<String> {
     }
 }
 
-inline fun <reified T> DatabaseReference.observeNewValues(): Observable<T> {
-    return Observable.create<T> { emitter ->
+inline fun <reified T> Query.observeNewValues(): Observable<IndexedValue<T>> {
+    return Observable.create<IndexedValue<T>> { emitter ->
         addChildEventListener(object : BaseChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String) {
-                    val newChild = dataSnapshot.getValue(T::class.java)
+                val newChild = dataSnapshot.getValue(T::class.java)
+                val newChildKey = dataSnapshot.key
+                val indexedNewChild = IndexedValue(newChildKey, newChild)
 
-                    newChild?.let {
-                        emitter.onNext(newChild)
-                    } ?: apply {
-                        val exception = IllegalStateException("No data found, ${T::class.java.simpleName} is null")
-                        emitter.onError(exception)
-                    }
+                newChild?.let {
+                    emitter.onNext(indexedNewChild)
+                } ?: apply {
+                    val exception = IllegalStateException("No data found, ${T::class.java.simpleName} is null")
+                    emitter.onError(exception)
                 }
+            }
 
                 override fun onCancelled(databaseError: DatabaseError) {
                     emitter.onError(databaseError.toException())
@@ -132,5 +135,7 @@ inline fun <reified T> DatabaseReference.observeNewValues(): Observable<T> {
             .publish()
             .autoConnect()
 }
+
+data class IndexedValue<out T>(val id: String? = null, val value: T? = null)
 
 data class Progress(val percents: Int)

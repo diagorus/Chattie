@@ -6,6 +6,7 @@ import com.fuh.chattie.R
 import com.fuh.chattie.model.ChatRoomRaw
 import com.fuh.chattie.model.MessageRaw
 import com.fuh.chattie.model.User
+import com.fuh.chattie.model.UserRaw
 import com.google.gson.Gson
 
 /**

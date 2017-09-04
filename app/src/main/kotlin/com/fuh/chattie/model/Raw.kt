@@ -6,7 +6,7 @@ package com.fuh.chattie.model
 data class MessageRaw(
         var userId: String? = null,
         var text: String? = null,
-        var timestamp: Long = 0
+        var timestamp: Long? = 0
 )
 
 data class UserRaw(

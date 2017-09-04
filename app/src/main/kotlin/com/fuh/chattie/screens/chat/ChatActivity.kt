@@ -6,15 +6,12 @@ import android.os.Bundle
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
-import android.view.MenuItem
 import com.fuh.chattie.R
-import com.fuh.chattie.model.MessagePres
+import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
 import com.fuh.chattie.model.datastore.MessagesDataStore
 import com.fuh.chattie.model.datastore.UsersDataStore
-import com.fuh.chattie.screens.profile.ProfileActivity
 import com.fuh.chattie.utils.ui.BaseToolbarActivity
 import com.fuh.chattie.utils.extentions.textValue
 import com.google.firebase.database.FirebaseDatabase
@@ -48,7 +45,7 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
         title = "Chat"
     }
 
-    override fun showChatInitial(currentUserId: String, messages: List<MessagePres>) {
+    override fun showChatInitial(currentUserId: String, messages: List<Message>) {
         chatMessageAdapter = ChatAdapter(currentUserId, messages)
 
         val layoutManager = LinearLayoutManager(this)
@@ -84,7 +81,7 @@ class ChatActivity : BaseToolbarActivity(), ChatContract.View {
         }
     }
 
-    override fun showChatNewMessage(message: MessagePres) {
+    override fun showChatNewMessage(message: Message) {
         chatMessageAdapter.addMessage(message)
     }
 

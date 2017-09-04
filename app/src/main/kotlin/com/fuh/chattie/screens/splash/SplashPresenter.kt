@@ -21,27 +21,23 @@ class SplashPresenter(
 
     override fun checkUser() {
         currentUserAuthDataSource.getUser()
-                .subscribe(
-                        {
-                            view.showUserSigned(it)
-                        },
-                        {
-                            Timber.e(it)
-                            view.showUserNotSigned()
-                        }
-                )
+                .subscribe({
+                    view.showUserSigned(it)
+                }, {
+                    Timber.e(it)
+                    view.showUserNotSigned()
+                })
     }
 
     override fun saveCurrentUser() {
         currentUserAuthDataSource.getUser()
                 .doOnSuccess { usersDataStore.postUser(it) }
                 .doOnSuccess { currentUserIdDataStore.setCurrentUserId(it.id!!) }
-                .subscribe(
-                        { view.showUserSigned(it) },
-                        {
-                            Timber.e(it)
-                            view.showUserNotSigned()
-                        }
-                )
+                .subscribe({
+                    view.showUserSigned(it)
+                }, {
+                    Timber.e(it)
+                    view.showUserNotSigned()
+                })
     }
 }

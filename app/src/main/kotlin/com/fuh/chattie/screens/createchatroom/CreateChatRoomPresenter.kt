@@ -33,6 +33,7 @@ class CreateChatRoomPresenter(
                 .filter {
                     it.id != currentUserId
                 }
+                .map { User(it.id, it.value?.name, it.value?.photoUrl) }
                 .toList()
                 .subscribe(
                         { view.showUsers(it) },

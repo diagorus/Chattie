@@ -5,6 +5,7 @@ import com.fuh.chattie.model.Message
 import com.fuh.chattie.model.MessageRaw
 import com.fuh.chattie.model.datastore.contracts.DATABASE_CHAT_ROOMS
 import com.fuh.chattie.model.datastore.contracts.DATABASE_MESSAGES
+import com.fuh.chattie.utils.extentions.IndexedValue
 import com.fuh.chattie.utils.extentions.observeAllValuesOnce
 import com.fuh.chattie.utils.extentions.observeNewValues
 import com.fuh.chattie.utils.extentions.toMap
@@ -43,15 +44,16 @@ class MessagesDataStore(private val firebaseDatabase: FirebaseDatabase) {
                 .child(chatRoomId)
     }
 
-    fun listenForNewMessages(chatRoomId: String): Observable<MessageRaw> {
+    fun listenForNewMessages(chatRoomId: String): Observable<IndexedValue<MessageRaw>> {
         return firebaseDatabase
                 .reference
                 .child(DATABASE_MESSAGES)
                 .child(chatRoomId)
                 .observeNewValues()
+
     }
 
-    fun getAllMessagesContinuously(chatRoomId: String): Observable<MessageRaw> {
+    fun getAllMessages(chatRoomId: String): Observable<IndexedValue<MessageRaw>> {
         return firebaseDatabase
                 .reference
                 .child(DATABASE_MESSAGES)

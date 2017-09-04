@@ -3,6 +3,7 @@ package com.fuh.chattie.model.datastore
 import com.fuh.chattie.model.User
 import com.fuh.chattie.model.UserRaw
 import com.fuh.chattie.model.datastore.contracts.DATABASE_USERS
+import com.fuh.chattie.utils.extentions.IndexedValue
 import com.fuh.chattie.utils.extentions.observeAllValuesOnce
 import com.fuh.chattie.utils.extentions.observeCompletion
 import com.fuh.chattie.utils.extentions.observeInitial
@@ -25,7 +26,7 @@ class UsersDataStore(private val firebaseDatabase: FirebaseDatabase) {
                 .observeCompletion()
     }
 
-    fun getUser(id: String): Single<UserRaw> {
+    fun getUser(id: String): Single<IndexedValue<UserRaw>> {
         return firebaseDatabase
                 .reference
                 .child(DATABASE_USERS)
@@ -33,7 +34,7 @@ class UsersDataStore(private val firebaseDatabase: FirebaseDatabase) {
                 .observeInitial()
     }
 
-    fun getAllUsers(): Observable<User> {
+    fun getAllUsers(): Observable<IndexedValue<UserRaw>> {
         return firebaseDatabase
                 .reference
                 .child(DATABASE_USERS)
