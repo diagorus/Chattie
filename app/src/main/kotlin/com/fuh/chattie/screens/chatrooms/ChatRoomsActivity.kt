@@ -12,6 +12,7 @@ import com.fuh.chattie.R
 import com.fuh.chattie.model.ChatRoom
 import com.fuh.chattie.model.datastore.ChatRoomsDataStore
 import com.fuh.chattie.model.datastore.CurrentUserIdDataStore
+import com.fuh.chattie.model.datastore.UsersDataStore
 import com.fuh.chattie.screens.chat.ChatActivity
 import com.fuh.chattie.screens.createchatroom.CreateChatRoomActivity
 import com.fuh.chattie.screens.profile.ProfileActivity
@@ -30,35 +31,12 @@ class ChatRoomsActivity : BaseToolbarActivity(), ChatRoomsContract.View {
     }
 
     override lateinit var presenter: ChatRoomsContract.Presenter
-    private lateinit var chatRoomsAdapter: FirebaseRecyclerAdapter<ChatRoom, ChatRoomViewHolder>
+    private lateinit var chatRoomsAdapter: ChatRoomsAdapter
 
     override fun getLayoutId(): Int = R.layout.chatrooms_activity
 
     override fun ActionBar.init() {
         title = "Chat rooms"
-    }
-
-    override fun showChatRooms(query: Query) {
-        chatRoomsAdapter = object : FirebaseRecyclerAdapter<ChatRoom, ChatRoomViewHolder>(
-                ChatRoom::class.java,
-                R.layout.chatroom_item,
-                ChatRoomViewHolder::class.java,
-                query
-        ) {
-            override fun populateViewHolder(viewHolder: ChatRoomViewHolder, model: ChatRoom, position: Int) {
-                viewHolder.bind(model) {
-                    val chatRoomId = chatRoomsAdapter.getRef(position).key
-
-                    val intent = ChatActivity.newIntent(this@ChatRoomsActivity, chatRoomId)
-                    startActivity(intent)
-                }
-            }
-        }
-
-        val layoutManager = LinearLayoutManager(this)
-
-        rvChatRooms.layoutManager = layoutManager
-        rvChatRooms.adapter = chatRoomsAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +45,7 @@ class ChatRoomsActivity : BaseToolbarActivity(), ChatRoomsContract.View {
         presenter = ChatRoomsPresenter(
                 this,
                 CurrentUserIdDataStore(this),
+                UsersDataStore(FirebaseDatabase.getInstance()),
                 ChatRoomsDataStore(FirebaseDatabase.getInstance())
         )
         presenter.start()
@@ -103,6 +82,37 @@ class ChatRoomsActivity : BaseToolbarActivity(), ChatRoomsContract.View {
     override fun onDestroy() {
         super.onDestroy()
 
-        chatRoomsAdapter.cleanup()
+//        chatRoomsAdapter.cleanup()
+    }
+
+//    override fun showChatRooms(query: Query) {
+//        chatRoomsAdapter = object : FirebaseRecyclerAdapter<ChatRoom, ChatRoomViewHolder>(
+//                ChatRoom::class.java,
+//                R.layout.chatroom_item,
+//                ChatRoomViewHolder::class.java,
+//                query
+//        ) {
+//            override fun populateViewHolder(viewHolder: ChatRoomViewHolder, model: ChatRoom, position: Int) {
+//                viewHolder.bind(model) {
+//                    val chatRoomId = chatRoomsAdapter.getRef(position).key
+//
+//                    val intent = ChatActivity.newIntent(this@ChatRoomsActivity, chatRoomId)
+//                    startActivity(intent)
+//                }
+//            }
+//        }
+//
+//        val layoutManager = LinearLayoutManager(this)
+//
+//        rvChatRooms.layoutManager = layoutManager
+//        rvChatRooms.adapter = chatRoomsAdapter
+//    }
+
+    override fun showChatRoomsInitial(initial: List<ChatRoom>) {
+        chatRoomsAdapter = ChatRoomsAdapter(initial)
+    }
+
+    override fun showChatRoomsChanges(changed: ChatRoom) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

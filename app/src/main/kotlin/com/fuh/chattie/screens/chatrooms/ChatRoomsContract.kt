@@ -1,5 +1,6 @@
 package com.fuh.chattie.screens.chatrooms
 
+import com.fuh.chattie.model.ChatRoom
 import com.fuh.chattie.utils.mvp.BasePresenter
 import com.fuh.chattie.utils.mvp.BaseView
 import com.google.firebase.database.Query
@@ -13,6 +14,8 @@ object ChatRoomsContract {
     }
 
     interface View : BaseView<Presenter> {
-        fun showChatRooms(query: Query)
+//        fun showChatRooms(query: Query)
+        fun showChatRoomsInitial(initial: List<ChatRoom>)
+        fun showChatRoomsChanges(changed: ChatRoom)
     }
 }

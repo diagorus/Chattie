@@ -44,10 +44,10 @@ class ChatPresenter(
         val initialMessagesDisposable = Observable.combineLatest(
                 rawMessagesObs.delay { membersMapObs },
                 membersMapObs,
-                BiFunction { (id, messageRaw): IndexedValue<MessageRaw>, membersMap: Map<String, UserRaw> ->
+                BiFunction { (_, messageRaw): IndexedValue<MessageRaw>, membersMap: Map<String, UserRaw> ->
                     val user = membersMap[messageRaw?.userId]
 
-                    Message(id, User(messageRaw?.userId, user?.name, user?.photoUrl), messageRaw?.text, messageRaw?.timestamp)
+                    Message(User(messageRaw?.userId, user?.name, user?.photoUrl), messageRaw?.text, messageRaw?.timestamp)
                 }
         )
                 .toList()
@@ -63,10 +63,10 @@ class ChatPresenter(
         val newMessagesDisposable = messagesDataStore.listenForNewMessages(parameters.chatRoomId)
                 .withLatestFrom(
                         membersMapObs,
-                        BiFunction { (id, messageRaw): IndexedValue<MessageRaw>, membersMap: Map<String, UserRaw> ->
+                        BiFunction { (_, messageRaw): IndexedValue<MessageRaw>, membersMap: Map<String, UserRaw> ->
                             val userRaw = membersMap[messageRaw?.userId]
 
-                            Message(id, User(messageRaw?.userId, userRaw?.name, userRaw?.photoUrl), messageRaw?.text, messageRaw?.timestamp)
+                            Message(User(messageRaw?.userId, userRaw?.name, userRaw?.photoUrl), messageRaw?.text, messageRaw?.timestamp)
                         }
                 )
                 .subscribe({

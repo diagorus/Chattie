@@ -4,7 +4,7 @@ package com.fuh.chattie.model
  * Created by lll on 23.08.2017.
  */
 data class Message(
-        var id: String? = null,
+//        var id: String? = null,
         var user: User? = null,
         var text: String? = null,
         var timestamp: Long? = 0
